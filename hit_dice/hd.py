@@ -1,7 +1,7 @@
 embed
 <drac2>
-args = &ARGS&
-command = args[0]
+args = argparse(&ARGS&)
+command = "&1&"
 count = int(command) if command.isdigit() else 0
 
 current_character = character()
@@ -59,26 +59,30 @@ fields = ""
 target_info = ""
 
 if command != "cc":
-  if hd12 != cc_hd12_max:
+  if hd12 > cc_hd12_max:
     fields += f"""-f "{cc_hd12}|You do not have the correct number of d12 hit dice (expected {hd12}, got {cc_hd12_max}).
 Run `!hd cc` to fix this." """
-  if hd10 != cc_hd10_max:
+  if hd10 > cc_hd10_max:
     fields += f"""-f "{cc_hd10}|You do not have the correct number of d10 hit dice (expected {hd10}, got {cc_hd10_max}).
 Run `!hd cc` to fix this." """
-  if hd8 != cc_hd8_max:
+  if hd8 > cc_hd8_max:
     fields += f"""-f "{cc_hd8}|You do not have the correct number of d8 hit dice (expected {hd8}, got {cc_hd8_max}).
 Run `!hd cc` to fix this." """
-  if hd6 != cc_hd6_max:
+  if hd6 > cc_hd6_max:
     fields += f"""-f "{cc_hd6}|You do not have the correct number of d6 hit dice (expected {hd6}, got {cc_hd6_max}).
 Run `!hd cc` to fix this." """
 
 if command == "help":
-  description = """
-`help` - you know what this is, this is this
-`cc` - set up the CCs appropriate for your class and level
-`max` - max out your hit dice, recovering all of them
-`lr` - recover the number specified in the rules on long rest (half of your total, minimum of one)
-# - use a number of hit dice and apply the healing
+  description = """**Getting Started**
+Run `!level` or `!hd cc` to create the CCs for your character based on class and level. If you need to set this up manually, the command is `!cc create 'Hit Dice (d#)' -min 0 -max CLASS_LEVEL`.
+**Using Hit Dice**
+To use hit dice from the pool, simply run `!hd 1` (you can use more by using a larger number).
+**Song of Rest/Additional Healing**
+To add additional healing with your hit dice, run `!hd 1 -b 1d6`.
+**Recovering Hit Dice**
+When you take a long rest, run `!hd lr` to recover half of your hit dice (minimum of 1).
+**Resetting Hit Dice**
+To reset all of the counter, run `!hd max` to recover all of your hit dice.
 """
 elif command == "cc":
   description = "Setting up CCs to match your character's class and level."
@@ -139,37 +143,40 @@ elif count > cc_hd_total:
 elif count > 0:
   title = f"{combatant_name} uses Hit Dice"
   description = ""
-  healing_total = 0
+  healing = []
+  used = ""
+  con_healing = f"{con_mod*count}"
   if cc_hd12_val > 0:
     dice = min(count, cc_hd12_val)
-    healing_roll = vroll(f"{dice}d12+{con_mod*dice}")
-    fields+= f"""-f "Healing (d12)|{healing_roll}" """
+    healing.append(f"{dice}d12")
     count -= dice
-    healing_total += healing_roll.total
     current_character.mod_cc(cc_hd12, -dice)
+    used += f"""-f "{cc_hd12}|{current_character.cc_str(cc_hd12)} (-{dice})" """
   if count > 0 and cc_hd10_val > 0:
     dice = min(count, cc_hd10_val)
-    healing_roll = vroll(f"{dice}d10+{con_mod*dice}")
-    fields+= f"""-f "Healing (d10)|{healing_roll}" """
+    healing.append(f"{dice}d10")
     count -= dice
-    healing_total += healing_roll.total
     current_character.mod_cc(cc_hd10, -dice)
+    used += f"""-f "{cc_hd10}|{current_character.cc_str(cc_hd10)} (-{dice})" """
   if count > 0 and cc_hd8_val > 0:
     dice = min(count, cc_hd8_val)
-    healing_roll = vroll(f"{dice}d8+{con_mod*dice}")
-    fields+= f"""-f "Healing (d8)|{healing_roll}" """
+    healing.append(f"{dice}d8")
     count -= dice
-    healing_total += healing_roll.total
     current_character.mod_cc(cc_hd8, -dice)
+    used += f"""-f "{cc_hd8}|{current_character.cc_str(cc_hd8)} (-{dice})" """
   if count > 0 and cc_hd6_val > 0:
     dice = min(count, cc_hd6_val)
-    healing_roll = vroll(f"{dice}d6+{con_mod*dice}")
-    fields+= f"""-f "Healing (d6)|{healing_roll}" """
+    healing.append(f"{dice}d6")
     count -= dice
-    healing_total += healing_roll.total
     current_character.mod_cc(cc_hd6, -dice)
-  current_combatant.modify_hp(healing_total, overflow=False)
-  target_info = f"{combatant_name}: {current_combatant.hp_str()} (+{healing_total})"
+    used += f"""-f "{cc_hd6}|{current_character.cc_str(cc_hd6)} (-{dice})" """
+  healing.append(con_healing)
+  healing.extend(args.get('b'))
+  healing_roll = vroll('+'.join(healing))
+  fields += f"""-f "Healing|{healing_roll}" """
+  current_combatant.modify_hp(healing_roll.total, overflow=False)
+  target_info = f"{combatant_name}: {current_combatant.hp_str()} (+{healing_roll.total})"
+  fields += used
 </drac2>
 -title "{{title}}"
 {{f"""-desc "{description}" """ if description else ""}}
