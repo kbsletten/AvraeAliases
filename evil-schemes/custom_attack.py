@@ -11,70 +11,42 @@ bl="bludgeoning"
 pi="piercing"
 sl="slashing"
 weapons = {
-  "ba": { n: "Battleaxe", d: 8, t: sl, v: 10 },
   "battleaxe": { n: "Battleaxe", d: 8, t: sl, v: 10 },
+  "blowgun": { n: "Blowgun", d: 1, t: p, r: True },
   "club": { n: "Club", d: 4, t: bl },
-  "cl": { n: "Club", d: 4, t: bl },
-  "dg": { n: "Dagger", d: 4, t: bl, f: True },
   "dagger": { n: "Dagger", d: 4, t: bl, f: True },
-  "da": { n: "Dart", d: 4, t: pi, f: True },
   "dart": { n: "Dart", d: 4, t: pi, f: True },
-  "fl": { n: "Flail", d: 8, t: bl },
   "flail": { n: "Flail", d: 8, t: bl },
-  "gl": { n: "Glaive", d: 10, t: sl },
   "glaive": { n: "Glaive", d: 10, t: sl },
-  "ga": { n: "Greataxe", d: 12, t: sl },
   "greataxe": { n: "Greataxe", d: 12, t: sl },
-  "gc": { n: "Greatclub", d: 8, t: bl },
   "greatclub": { n: "Greatclub", d: 8, t: bl },
-  "gs": { n: "Greatsword", c: 2, d: 6, t: sl },
   "greatsword": { n: "Greatsword", c: 2, d: 6, t: sl },
-  "hl": { n: "Halberd", d: 10, t: sl },
   "halberd": { n: "Halberd", d: 10, t: sl },
   "handaxe": { n: "Handaxe", d: 6, t: sl },
-  "ha": { n: "Handaxe", d: 6, t: sl },
-  "jv": { n: "Javelin", d: 6, t: sl },
+  "hand crossbow": { n: "Hand Crossbow", d: 4, t: p, r: True },
+  "heavy crossbow": { n: "Heavy Crossbow", d: 10, t: p, r: True },
   "javelin": { n: "Javelin", d: 6, t: sl },
-  "la": { n: "Lance", d: 12, t: pi },
   "lance": { n: "Lance", d: 12, t: pi },
-  "lc": { n: "Light Crossbow", d: 8, t: pi, r: True },
   "light crossbow": { n: "Light Crossbow", d: 8, t: pi, r: True },
-  "lh": { n: "Light Hammer", d: 4, t: bl },
   "light hammer": { n: "Light Hammer", d: 4, t: bl },
-  "ls": { n: "Longsword", d: 8, t: sl, v: 10 },
+  "longbow": { n: "Longbow", d: 8, t: p, r: True },
   "longsword": { n: "Longsword", d: 8, t: sl, v: 10 },
-  "mc": { n: "Mace", d: 6, t: bl },
   "mace": { n: "Mace", d: 6, t: bl },
   "maul": { n: "Maul", c: 2, d: 6, t: bl },
-  "ml": { n: "Maul", c: 2, d: 6, t: bl },
   "morningstar": { n: "Morningstar", d: 8, t: pi },
-  "ms": { n: "Morningstar", d: 8, t: pi },
-  "pi": { n: "Pike", d: 10, t: pi },
   "pike": { n: "Pike", d: 10, t: pi },
-  "qs": { n: "Quarterstaff", d: 6, t: bl, v: 8 },
   "quarterstaff": { n: "Quarterstaff", d: 6, t: bl, v: 8 },
-  "rp": { n: "Rapier", d: 8, t: pi, f: True },
   "rapier": { n: "Rapier", d: 8, t: pi, f: True },
-  "sc": { n: "Scimitar", d: 6, t: sl, f: True },
   "scimitar": { n: "Scimitar", d: 6, t: sl, f: True },
-  "sb": { n: "Shortbow", d: 6, t: pi, r: True },
   "shortbow": { n: "Shortbow", d: 6, t: pi, r: True },
-  "ss": { n: "Shortsword", d: 6, t: pi, f: True },
   "shortsword": { n: "Shortsword", d: 6, t: pi, f: True },
-  "si": { n: "Sickle", d: 4, t: sl },
   "sickle": { n: "Sickle", d: 4, t: sl },
-  "sl": { n: "Sling", d: 6, t: bl, r: True },
   "sling": { n: "Sling", d: 6, t: bl, r: True },
   "trident": { n: "Trident", d: 6, t: pi, v: 8 },
-  "sp": { n: "Spear", d: 6, t: pi, v: 8 },
   "spear": { n: "Spear", d: 6, t: pi, v: 8 },
   "unarmed": { n: "Unarmed Strike", d: 1, t: bl },
-  "un": { n: "Unarmed Strike", d: 1, t: bl },
-  "wp": { n: "War Pick", d: 8, t: pi },
   "war pick": { n: "War Pick", d: 8, t: pi },
-  "wh": { n: "Warhammer", d: 8, t: bl, v: 10 },
   "warhammer": { n: "Warhammer", d: 8, t: bl, v: 10 },
-  "wp": { n: "Whip", d: 4, t: sl, f: True },
   "whip": { n: "Whip", d: 4, t: sl, f: True }
 }
 
@@ -130,7 +102,7 @@ debug = f"""-f "Debug|**Weapon**: {weapon_count}d{weapon_die}
 """
 
 fields = ""
-title = f"""{combatant_name} attacks with a {weapon_name}{" (Two-handed)" if two_handed else ""}"""
+title = f"""{combatant_name} attacks with a {"2-Handed " if two_handed else ""}{weapon_name}"""
 desc = ""
 target_info = ""
 
@@ -146,7 +118,8 @@ if command == "help":
 """
   fields = ""
 else:
-  for target_name in args.get("t"):
+  targets = args.get("t")
+  for target_name in (targets if len(targets) else ["Meta"]):
     attack_roll = vroll(f"1d20+{weapon_attack}")
     damage_expr = args.last("d", f"{weapon_expr}[{weapon_type}]")
     is_miss = auto_miss or "(**1**)" in attack_roll.dice
@@ -158,7 +131,7 @@ else:
     elif target:
       target_damage = "**Miss!**"
     fields += f"""
-  -f "{target.name}|**To Hit**: {attack_roll if not auto_miss else "Automatic miss"}
+  -f "{target.name if target else target_name}|**To Hit**: {attack_roll if not auto_miss else "Automatic miss"}
 {target_damage}"
 """
     target_info += f"{target.name} {target.hp_str()}\n" if target else ""
@@ -166,6 +139,7 @@ else:
 -title "{{title}}"
 -desc  "{{desc}}"
 {{fields}}
+{{f"""-f "Effect|Proficiency with a {weapon_name.lower()} allows you to add your proficiency bonus to the attack roll for any attack you make with it." """ if weapon_name else ""}}
 {{debug if is_debug else ""}}
 {{f"""-footer "{target_info}" """ if target_info else """-footer "Equipment | PHB" """}}
 -color <color>
