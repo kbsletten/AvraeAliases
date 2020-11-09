@@ -206,4 +206,4 @@ n = monster_names[vroll(f"1d{len(monster_names)}").total - 1]
 </drac2>
 -title "Names of North English Monsters"
 -desc "{{n}}"
--footer "The Denham Tracts 77-80"
+-footer "The Denham Tracts Vol. 2 77-80"
