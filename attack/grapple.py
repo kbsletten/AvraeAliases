@@ -46,7 +46,8 @@ for target_expr in args.get("t"):
   if target and not escape_success:
     target.add_effect(f"Grappled by {name}", "", parent=grapple_effect)
   escape_message = "Automatic Pass!" if escape_result == True else "Automatic Fail!" if escape_result == False else f"{escape_roll}; {'Success!' if escape_success else 'Failure!'}"
-  fields += f"""-f "{target.name if target else target_name}|**{skill_name}**: {escape_message}" """
+  fields += f"""-f "{target.name if target else target_name}|**{skill_name}**: {escape_message}
+{f"**Effect**: Grappled by {name}" if not escape_success else ""}" """
 </drac2>
 -title "{{name}} attempts to Grapple!"
 -f "{{name}}|**Athletics**: {{grapple_roll}}"
