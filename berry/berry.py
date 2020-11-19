@@ -48,7 +48,7 @@ elif command == "cast":
   fields += f"""-f "Spell Slots|{current_spellbook.slots_str(level)}" """
 elif command == "eat":
   title = f"{combatant_name} tries to eat {article} Goodberr{plural}"
-  berries = current_character.get_cc(cc) if cc_exists else 0
+  berries = current_character.get_cc(cc) if has_cc else 0
   if number > 0 and berries >= number:
     title = f"{combatant_name} eats {article} Goodberr{plural}"
     fields += f"""-f "Meta|**Healing**: {number}" """
@@ -62,7 +62,7 @@ elif command == "eat":
   fields += effect
 elif command == "give":
   title = f"{combatant_name} tries to give {article} Goodberr{plural}"
-  berries = current_character.get_cc(cc) if cc_exists else 0
+  berries = current_character.get_cc(cc) if has_cc else 0
   if number > 0 and berries >= number:
     title = f"{combatant_name} gives {article} Goodberr{plural}"
     target_name = args.last("t", default="Meta")
