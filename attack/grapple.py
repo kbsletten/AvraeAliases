@@ -40,7 +40,7 @@ for target_expr in args.get("t"):
   escape_bonus = ''.join([f"+{bonus}" for bonus in args.get("b")])
   escape_roll = vroll(f"{escape_expr}{escape_bonus}")
   escape_success = escape_roll.total >= grapple_roll.total if escape_result is None else escape_result
-  if current and init and not escape_success:
+  if current and init and not grapple_effect and not escape_success:
     current.add_effect("Grappling", "")
     grapple_effect = current.get_effect("Grappling")
   if target and not escape_success:

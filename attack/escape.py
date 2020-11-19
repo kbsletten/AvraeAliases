@@ -25,7 +25,7 @@ fields = ""
 grapple_effect = current.get_effect("Grappled") if current and init else None
 
 target_expr = args.last("t", grapple_effect.parent.combatant_name if grapple_effect and grapple_effect.parent else '')
-target_name, _, target_arg = target_expr.partition('|')
+target_name, _, target_arg = target_expr.partition('|') if target_expr else ("Someone", None, '')
 target_argv = target_arg.split(' ')
 target_args = argparse(target_arg)
 target = init.get_combatant(target_name) if init else None
