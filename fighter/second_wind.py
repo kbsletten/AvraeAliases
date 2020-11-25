@@ -43,6 +43,6 @@ elif fighter_level >= 2:
 -title "{{title}}"
 {{f"""-desc "{description}" """ if description else ""}}
 {{fields}}
-{{f""" -f "{cc} {cc_str(cc)}" """ if cc_value else ""}}
+{{f""" -f "{cc}|{cc_str(cc)}" """ if cc_value else ""}}
 {{f"""-footer "{target_info}" """ if target_info else """-footer "Fighter | PHB 72" """}}
 -color <color>
