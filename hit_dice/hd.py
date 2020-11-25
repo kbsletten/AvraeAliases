@@ -12,6 +12,7 @@ if not current_combatant:
 combatant_name = current_combatant.name if current_combatant else name
 
 con_mod = int(get("constitutionMod", 0))
+artificer_level = int(get("ArtificerLevel", 0))
 barbarian_level = int(get("BarbarianLevel", 0))
 bard_level = int(get("BardLevel", 0))
 cleric_level = int(get("ClericLevel", 0))
@@ -27,7 +28,7 @@ wizard_level = int(get("WizardLevel", 0))
 
 hd12 = barbarian_level
 hd10 = fighter_level + paladin_level + ranger_level
-hd8 = bard_level + cleric_level + druid_level + monk_level + rogue_level + warlock_level
+hd8 = artificer_level + bard_level + cleric_level + druid_level + monk_level + rogue_level + warlock_level
 hd6 = sorcerer_level + wizard_level
 
 cc_hd12 = "Hit Dice (d12)"
