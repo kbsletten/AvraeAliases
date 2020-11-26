@@ -1,78 +1,88 @@
 embed
 <drac2>
-abilities = ["strength", "dexterity", "constitution", "wisdom", "intelligence", "charisma"]
-abbr = { "str": "strength", "dex": "dexterity", "con": "constitution", "wis": "wisdom", "int": "intelligence", "cha": "charisma" }
-sname = { "str": "Strength", "dex": "Dexterity", "con": "Constitution", "wis": "Wisdom", "int": "Intelligence", "cha": "Charisma" }
-
-argv = &ARGS&
-args = argparse(argv)
-
-save = args.last('save', 'dex')[:3].lower()
-if save not in abbr:
-  save = 'dex'
-
-title = args.last("title", "Make a [sname] Save!").replace('[name]', name).replace('[sname]', sname[save])
-fields = ""
-
-
-ability = args.last('a', None)
-if ability in abbr:
-  ability = abbr[ability]
-if ability not in abbr.values():
-  ability = None
+args = argparse("&*&")
 
 init = combat()
-current = init.current if init else None
-stats = current.stats if current else None
-default_dc = 8 + stats.prof_bonus + int(stats.get_mod(ability)) if stats and ability else 10
 
-dc = args.last('dc', default_dc)
-damage = args.last('d', None)
-if current and damage:
-  for ab in abilities:
-    damage = damage.replace(f'{{{ab}Mod}}', str(current.stats.get_mod(ab)))
-targets = args.get("t")
-bonuses = ''.join([f"+{bonus}" for bonus in args.get('b')])
-
-damage_roll = vroll(damage) if damage else None
-
-meta = "" if "-h" in argv else f"""**DC**: {dc}
-{f"**Damage**: {damage_roll}" if damage_roll else ""}
-"""
+title = "!muse - Monster !use"
+error = ""
+meta = ""
+fields = ""
 target_info = ""
 
-for target_expr in targets:
-  target_name, _, target_arg = target_expr.partition('|')
-  target_argv = target_arg.split(' ')
-  target_args = argparse(target_arg)
-  target = init.get_combatant(target_name) if init else None
-  if target:
-    has_adv = "adv" in argv or "adv" in target_argv
-    has_dis = "dis" in argv or "dis" in target_argv
-    auto_pass = "pass" in argv or "pass" in target_argv
-    auto_fail = "fail" in argv or "fail"
-    target_save = target.saves.get(save).d20(base_adv=True if has_adv else False if has_dis else None)
-    target_bonuses = ''.join([f"+{bonus}" for bonus in target_args.get('b')])
-    target_roll = vroll(f"{target_save}{bonuses}{target_bonuses}")
-    target_saved = target_roll.total > dc
-    target_damage = damage_roll.consolidated() if damage_roll else ""
-    if "avoid" in argv or "avoid" in target_argv:
-      if target_saved:
-        target_damage = f""
-      else:
-        target_damage = f"({target_damage})/2"
-    elif "half" in argv:
-      if target_saved:
-        target_damage = f"({target_damage})/2"
-    elif target_saved:
-      target_damage = ""
-    target_damage = target.damage(target_damage)["damage"] if target_damage else ""
-    fields += f"""-f "{target_name}|**{save.upper()} Save**: {target_roll}; {"Success!" if target_saved else "Failure!"}
-{target_damage}" """
-    target_info += f"{target.name} {target.hp_str()}\n"
+damage = args.get("d")
+effect = args.get("effect")
+save = args.last("save")
+dc = int(args.last("dc", 10))
+bonuses = args.get("b")
+advantage = args.adv()
+half = "half" in args
+avoid = "avoid" in args
+auto_success = "pass" in args
+auto_failure = "fail" in args
+
+damage_roll = vroll("+".join(x for x in damage)) if damage else None
+
+meta_lines = [
+  f"""**Damage**: {damage_roll}""" if damage_roll else "",
+  f"""**Effect**: {effect}""" if effect else "",
+  f"""**DC**: {dc}""" if save else "",
+  f"""{save.upper()} save""" if save else "",
+  f"""**Bonus**: {"+".join(bonuses)}""" if bonuses else "",
+  f"""**Advantage**: {"dis" if advantage == -1 else "adv"}""" if advantage else ""
+]
+meta = "\n".join([x for x in meta_lines if x])
+
+if init:
+  for target_expr in args.get("t"):
+    target_name, _, target_argv = target_expr.partition("|")
+    target_args = argparse(target_argv)
+
+    target = init.get_combatant(target_name)
+
+    if not target:
+      continue
+
+    target_damage = target_args.get("d")
+    target_effect = target_args.get("effect")
+    target_save = target_args.last("save", save)
+    target_dc = int(target_args.last("dc", dc))
+    target_bonuses = target_args.get("b")
+    target_advantage = target_args.adv()
+    target_auto_success = "pass" in args
+    target_auto_failure = "fail" in args
+
+    total_bonuses = bonuses + target_bonuses
+    total_advantage = target_advantage or advantage
+    total_auto_success = target_auto_success or auto_success
+    total_auto_failure = target_auto_failure or auto_failure
+
+    target_damage_roll = vroll("+".join(x for x in target_damage)) if target_damage else None
+
+    if target_save:
+      base_adv = True if total_advantage == 1 else False if total_advantage == -1 else None
+      target_base = target.saves.get(target_save).d20(base_adv=base_adv)
+      target_save_roll = vroll("+".join([target_base] + total_bonuses))
+      target_success = target_save_roll.total >= target_dc
+    else:
+      target_success = false
+
+    total_damage = "+".join(x.consolidated() for x in [damage_roll, target_damage_roll] if x)
+
+    result_damage = target.damage(total_damage)['damage'] if total_damage else ""
+
+    target_lines = [
+      f"""**Extra Damage**: {target_damage_roll}""" if target_damage_roll else "",
+      f"""**{save.upper()} Save**: {target_save_roll}; {"Success!" if target_success else "Failure!"}""",
+      f"""**Bonus**: {"+".join(total_bonuses)}""" if total_bonuses else "",
+      f"""**Advantage**: {"adv" if total_advantage == 1 else "dis"}""" if total_advantage else "",
+      result_damage
+    ]
+    field = "\n".join([x for x in target_lines if x])
+    fields += f"""-f "{target_name}|{field}" """
 </drac2>
 -title "{{title}}"
 {{f"""-f "Meta|{meta}" """ if meta else ""}}
-{{fields}}
+{{fields if not error else error}}
 {{f"""-footer "{target_info}" """ if target_info else """-footer "!muse" """}}
 -color <color>
