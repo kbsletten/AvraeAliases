@@ -27,23 +27,7 @@ errors = ""
 if monk_level >= 2 and ki_max < monk_level:
   errors += f"""-f "Incorrect Ki|Expected {monk_level} Ki Points but got {ki_max}. Run `!level` or `!ki cc` to fix this." """
 
-if command == "help":
-  title = f"{name} has Ki" if monk_level > 0 else title
-  fields += f"""-f "Meta|**Monk Level**: {monk_level}
-**Ki Points**: {ki_str}
-**Ki Save DC**: {ki_dc}" """
-  if monk_level >= 2:
-    fields += """-f "Flurry of Blows `!ki flurry`|Immediately after you take the Attack action on your turn, you can spend 1 ki point to make two unarmed strikes as a bonus action." """
-    fields += """-f "Patient Defense `!ki patient`|You can spend 1 ki point to take the Dodge action as a bonus action on your turn." """
-    fields += """-f "Step of the Wind `!ki step`|You can spend 1 ki point to take the Disengage or Dash action as a bonus action on your turn, and your jump distance is doubled for the turn." """
-  if monk_level >= 5:
-    fields += f"""-f "Stunning Strike `!ki stun -t TARGET`|When you hit another creature with a melee weapon attack, you can spend 1 ki point to attempt a stunning strike. The target must succeed on a DC {ki_dc} Constitution saving throw or be stunned until the end of your next turn." """
-  if monk_level >= 14:
-    fields += """-f "Diamond Soul `!ki soul`|Whenever you make a saving throw and fail, you can spend 1 ki point to reroll it and take the second result." """
-  if monk_level >= 18:
-    fields += """-f "Empty Body `!ki invis`|You can use your action to spend 4 ki points to become invisible for 1 minute. During that time, you also have resistance to all damage but force damage." """
-    fields += """-f "Empty Body `!ki astral`|You can spend 8 ki points to cast the astral projection spell, without needing material components. When you do so, you can’t take any other creatures with you." """
-elif command == "flurry":
+if command == "flurry":
   title = f"{name} uses Flurry of Blows"
   fields += """-f "Effect|Immediately after you take the Attack action on your turn, you can spend 1 ki point to make two unarmed strikes as a bonus action." """
   ki_mod = -1
@@ -57,7 +41,7 @@ elif command == "step":
   ki_mod = -1
 elif command == "stun":
   title = f"{name} uses Stunning Strike"
-  combatant = init.get_combatant(name) if init else None
+  combatant = init.me if init else None
   stun_effect = combatant.get_effect("Stunning Strike") if combatant and init else None
   targets = args.get("t")
   bonuses = args.get("b")
@@ -88,8 +72,23 @@ elif command == "stun":
       fields += f"""-f "{target.name if target else target_name}|**CON Save**: {save_message}
 {f"**Effect**: Stunned by {name}" if not save_success else ""}" """
       ki_mod -= 1
-  
   fields += f"""-f "Effect|When you hit another creature with a melee weapon attack, you can spend 1 ki point to attempt a stunning strike. The target must succeed on a DC {ki_dc} Constitution saving throw or be stunned until the end of your next turn." """
+else:
+  title = f"{name} has Ki" if monk_level > 0 else title
+  fields += f"""-f "Meta|**Monk Level**: {monk_level}
+**Ki Points**: {ki_str}
+**Ki Save DC**: {ki_dc}" """
+  if monk_level >= 2:
+    fields += """-f "Flurry of Blows `!ki flurry`|Immediately after you take the Attack action on your turn, you can spend 1 ki point to make two unarmed strikes as a bonus action." """
+    fields += """-f "Patient Defense `!ki patient`|You can spend 1 ki point to take the Dodge action as a bonus action on your turn." """
+    fields += """-f "Step of the Wind `!ki step`|You can spend 1 ki point to take the Disengage or Dash action as a bonus action on your turn, and your jump distance is doubled for the turn." """
+  if monk_level >= 5:
+    fields += f"""-f "Stunning Strike `!ki stun -t TARGET`|When you hit another creature with a melee weapon attack, you can spend 1 ki point to attempt a stunning strike. The target must succeed on a DC {ki_dc} Constitution saving throw or be stunned until the end of your next turn." """
+  if monk_level >= 14:
+    fields += """-f "Diamond Soul `!ki soul`|Whenever you make a saving throw and fail, you can spend 1 ki point to reroll it and take the second result." """
+  if monk_level >= 18:
+    fields += """-f "Empty Body `!ki invis`|You can use your action to spend 4 ki points to become invisible for 1 minute. During that time, you also have resistance to all damage but force damage." """
+    fields += """-f "Empty Body `!ki astral`|You can spend 8 ki points to cast the astral projection spell, without needing material components. When you do so, you can’t take any other creatures with you." """
 if has_ki:
   if ki_val + ki_mod >= 0:
     current.mod_cc(cc_name, ki_mod)
