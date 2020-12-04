@@ -82,4 +82,4 @@ else:
 {{fields}}
 {{f"""-f "{cc}|{current_character.cc_str(cc)}" """ if has_cc else ""}}
 {{f"""-footer "{target_info}" """ if target_info else """-footer "Goodberry | PHB 246" """}}
--color <color>
+-color <color> -thumb <image>

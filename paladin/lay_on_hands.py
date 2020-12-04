@@ -72,4 +72,4 @@ elif paladin_level > 0:
 {{fields}}
 {{f"""-f "{cc}|{cc_str(cc)}" """ if cc_value else ""}}
 {{f"""-footer "{target_info}" """ if target_info else """-footer "Paladin | PHB 84" """}}
--color <color>
+-color <color> -thumb <image>

@@ -51,4 +51,4 @@ elif paladin_level >= 2:
 {{fields}}
 {{f"""-f "Spell Slots|{slots_str(spell_level)}" """ if has_slot else ""}}
 {{f"""-footer "{target_info}" """ if target_info else """-footer "Paladin | PHB 85" """}}
--color <color>
+-color <color> -thumb <image>

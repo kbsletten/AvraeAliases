@@ -42,4 +42,4 @@ elif monk_level >= 6:
 {{fields}}
 {{f"""-f "{cc}|{cc_str(cc)}" """ if cc_value else ""}}
 -footer "UNEARTHED ARCANA 2020 Subclasses, Part 5"
--color <color>
+-color <color> -thumb <image>

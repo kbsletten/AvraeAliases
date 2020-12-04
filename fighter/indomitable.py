@@ -41,4 +41,4 @@ elif fighter_level >= 9:
 {{fields}}
 {{f""" -f "{cc}|{cc_str(cc)}" """ if cc_value else ""}}
 -footer "Fighter | PHB 72"
--color <color>
+-color <color> -thumb <image>

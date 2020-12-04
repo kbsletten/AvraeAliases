@@ -101,4 +101,4 @@ if has_ki:
 {{fields}}
 {{errors}}
 {{f""" -f "{cc_name}|{current.cc_str(cc_name)}{f" ({ki_mod})" if ki_mod != 0 else ""}" """ if has_ki else ""}}
--color <color>
+-color <color> -thumb <image>
