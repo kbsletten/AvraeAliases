@@ -50,3 +50,4 @@ The first time on each of your turns that you hit the favored enemy and deal dam
 -title "{{title}}"
 {{fields}}
 -footer "{{target_info if target_info else "Favored Foe | TCoE"}}"
+-color <color> -thumb <image>

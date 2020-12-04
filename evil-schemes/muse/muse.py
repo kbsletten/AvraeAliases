@@ -3,6 +3,11 @@ embed
 argv = &ARGS&
 args = argparse(argv)
 
+ability_name = args.last("ability").lower() if args.last("ability") else ""
+if ability_name:
+  abilities = [value for key, value in load_json(get("muse", "{}")).items() if ability_name in key.lower()]
+  args = argparse(abilities[0] + argv) if len(abilities) == 1 else args
+
 init = combat()
 current = init.current if init else None
 user = init.get_combatant(args.last("as")) if args.last("as") else current
