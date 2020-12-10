@@ -41,8 +41,8 @@ elif command == "step":
   ki_mod = -1
 elif command == "stun":
   title = f"{name} uses Stunning Strike"
-  combatant = init.me if init else None
-  stun_effect = combatant.get_effect("Stunning Strike") if combatant and init else None
+  me = init.me if init else None
+  stun_effect = me.get_effect("Stunning Strike") if me else None
   targets = args.get("t")
   bonuses = args.get("b")
   if len(targets) <= ki_val:
@@ -62,10 +62,10 @@ elif command == "stun":
       save_bonus = ''.join([f"+{bonus}" for bonus in target_args.get("b") + bonuses])
       save_roll = vroll(f"{save_expr}{save_bonus}")
       save_success = save_roll.total >= ki_dc if save_result is None else save_result
-      if combatant and not stun_effect and not save_success:
-        on_turn = init.current == combatant
-        combatant.add_effect("Stunning Strike", "", duration=1 if on_turn else 0, end=True)
-        stun_effect = combatant.get_effect("Stunning Strike")
+      if me and not stun_effect and not save_success:
+        on_turn = init.current.name == me.name if init.current else False
+        me.add_effect("Stunning Strike", "", duration=2 if on_turn else 1, end=True)
+        stun_effect = me.get_effect("Stunning Strike")
       if target and not save_success:
         target.add_effect(f"Stunned by {name}", "", parent=stun_effect)
       save_message = "Automatic Pass!" if save_result == True else "Automatic Fail!" if save_result == False else f"{save_roll}; {'Success!' if save_success else 'Failure!'}"
