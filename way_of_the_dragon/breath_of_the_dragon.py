@@ -59,7 +59,7 @@ elif cc_value:
             damage = f"{damage}/2"
           target_damage = target.damage(damage)["damage"]
           fields += f"""
-  -f "{target.name}|**WIS Save**: {target_save}; {"Success!" if target_passed else "Failure!"}
+  -f "{target.name}|**DEX Save**: {target_save}; {"Success!" if target_passed else "Failure!"}
 {target_damage}"
 """
           target_info += f"{target.name} {target.hp_str()}\n"
