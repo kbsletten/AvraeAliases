@@ -28,7 +28,7 @@ elif init:
     target_success = target_save_roll.total >= dc
     target_healed = target_success and target.hp < 1
     if target_healed:
-      target.set_hp(healing)
+      target.set_hp(1)
     fields += f"""-f "{target.name}|**CON Save**: {target_save_roll}; {"Success!" if target_success else "Failure!"}
 {f"**Healing**: 1" if target_healed else "No effect"}" """
     target_info += f"{target.name} {target.hp_str()}\n"
