@@ -1,7 +1,8 @@
 embed
 <drac2>
-args = argparse(&ARGS&)
-command = "&1&"
+argv = &ARGS&
+args = argparse(argv)
+command = argv[0] if argv else "help"
 count = int(command) if command.isdigit() else 0
 
 current_character = character()

@@ -5,7 +5,7 @@ command = "&1&"
 
 init = combat()
 
-dc = int(args.last("dc")) if args.last("dc") else None
+dc = int(args.last("dc", 10))
 bonuses = args.get("b")
 advantage = args.adv()
 auto = 1 if "pass" in args else 2 if "fail" in args else None
@@ -18,8 +18,6 @@ if command == "help":
 `!conc -dc 12 -t Player1`
 **Make Multiple Concentration Checks**
 `!conc -dc 17 -t Player1 -t Player2`" """
-elif not dc:
-  errors += "Missing DC (`-dc DC`)\n"
 elif init:
   for target_expr in args.get("t"):
     target_name, _, target_argv = target_expr.partition("|")
