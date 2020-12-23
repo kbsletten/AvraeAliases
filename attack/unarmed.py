@@ -63,5 +63,6 @@ for target_expr in args.get("t"):
 </drac2>
 -title "{{title}}"
 {{fields if fields else meta}}
+{{'\n'.join(f"""-f "{field}" """ for field in args.get("f"))}}
 -f "Effect|***Melee Weapon Attack:*** +{{to_hit}} to hit, reach 5 ft., one target. *Hit:* {{max(0, 1 + str_mod)}} {{damage_type}} damage."
 -footer "{{target_info if target_info else "Unarmed Strike | PHB 195"}}"
