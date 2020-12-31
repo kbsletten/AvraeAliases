@@ -2,7 +2,7 @@ embed
 <drac2>
 argv = &ARGS&
 args = argparse(argv)
-command = argv[0] if argv else "help"
+command = argv[0] if argv else ""
 count = int(command) if command.isdigit() else 0
 
 current_character = character()
@@ -179,8 +179,16 @@ elif count > 0:
   current_combatant.modify_hp(healing_roll.total, overflow=False)
   target_info = f"{combatant_name}: {current_combatant.hp_str()} (+{healing_roll.total})"
   fields += used
+else:
+  title = f"{combatant_name}'s current Hit Dice"
+  description = ""
+  for cc in [cc_hd12, cc_hd10, cc_hd8, cc_hd6]:
+    if not current_character.cc_exists(cc):
+      continue
+    fields += f"""-f "{cc}|{current_character.cc_str(cc)}|inline" """
 </drac2>
 -title "{{title}}"
 {{f"""-desc "{description}" """ if description else ""}}
 {{fields}}
 {{f"""-footer "{target_info}" """ if target_info else """-footer "Resting | PHB 186" """}}
+-color <color> -thumb <image>

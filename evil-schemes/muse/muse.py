@@ -21,9 +21,6 @@ fields = ""
 target_info = ""
 
 damage = args.get("d")
-effect = args.last("effect")
-duration = int(args.last("duration")) if args.last("duration") else None
-end = "end" in args
 save = args.last("save", "dex")
 dc = int(args.last("dc", 10))
 bonuses = args.get("b")
@@ -33,7 +30,22 @@ avoid = "avoid" in args
 auto_success = "pass" in args
 auto_failure = "fail" in args
 
-damage_roll = vroll("+".join(x for x in damage)) if damage else None
+
+effect = args.last("effect")
+duration = int(args.last("duration")) if args.last("duration") else -1
+end = "end" in args
+
+parent_effect = args.last("peffect")
+parent_duration = int(args.last("pduration")) if args.last("pduration") else -1
+parent_end = "pend" in args
+
+parent = None
+parent_effect_name, _, parent_effect_expr = parent_effect.partition("|") if parent_effect else ["", None, ""]
+if parent_effect_name and user:
+  user.add_effect(parent_effect_name, parent_effect_expr, duration=parent_duration, end=parent_end)
+  parent = user.get_effect(parent_effect_name)
+
+damage_roll = vroll("+".join(damage)) if damage else None
 
 meta_lines = [
   f"""**Damage**: {damage_roll}""" if damage_roll else "",
@@ -89,7 +101,7 @@ if init:
     
     effect_name, _, effect_expr = total_effect.partition("|") if total_effect else ["", None, ""]
     if effect_name and not target_success:
-      target.add_effect(effect_name, effect_expr, duration=duration, end=end)
+      target.add_effect(effect_name, effect_expr, duration=duration, end=end, parent=parent)
 
     result_damage = target.damage(total_damage)['damage'] if total_damage else ""
 

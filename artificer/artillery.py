@@ -42,7 +42,38 @@ The cannon is a magical object. Regardless of size, the cannon has an AC of 18 a
     fields = """-f "Error|You don't have the Eldritch Cannon feature. It's available to 3rd-level Artillerist. Update your character to have the correct class levels and run `!level artificer artillerist` to set it up." """
 elif command == "flame":
   dc = int(args.last("dc", char_spells.dc))
+  bonuses = args.get("b")
+  damage = args.get("d")
+  advantage = args.adv()
+  auto_success = "pass" in args
+  auto_failure = "fail" in args
+
+  damage_roll = vroll("+".join(["3d8[magical fire]"] + damage))
+
   for target_expr in args.get("t"):
+    target_name, _, target_args = target_expr.partition("|")
+
+    target_bonuses = target_args.get("b")
+    target_damage = target_args.get("d")
+    target_advantage = target_args.adv()
+    target_avoid = "avoid" in target_args
+    target_auto_success = "pass" in target_args
+    target_auto_failure = "fail" in target_args
+
+    total_bonuses = bonuses + target_bonuses
+    total_damage = damage + target_damage
+    total_advantage = target_advantage or advantage
+    total_auto_success = target_auto_success or auto_success
+    total_auto_failure = target_auto_failure or auto_failure
+
+    target = init.get_combatant(target_name) if init else None
+    if not target:
+      continue
+    base_adv = True if total_advantage == 1 else False if total_advantage == -1 else None
+    target_base = target.saves.get("dex").d20(base_adv=base_adv)
+    target_save_roll = vroll("+".join([target_base] + total_bonuses))
+elif command == "protect":
+
     
 </drac2>
 -title {{title}}
