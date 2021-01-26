@@ -32,6 +32,8 @@ help = """**To create the CC**
 """
 effect = """-f "Effect|A creature can use its action to eat one berry. Eating a berry restores 1 hit point, and the berry provides enough nourishment to sustain a creature for one day." """
 
+cc_mod = ""
+
 if command == "cc":
   title = "Creating Goodberry CC"
   description = help
@@ -41,10 +43,11 @@ elif command == "cast":
   fields += """-f "Effect|Up to ten berries appear in your hand and are infused with magic for the duration. A creature can use its action to eat one berry. Eating a berry restores 1 hit point, and the berry provides enough nourishment to sustain a creature for one day." """
   level = int(args.last("l", default=1))
   slots = current_spellbook.get_slots(level)
-  if slots > 0:
+  if slots > 0 and has_cc:
     title = f"{combatant_name} casts Goodberry"
     current_spellbook.use_slot(level)
     current_character.mod_cc(cc, 10)
+    cc_mod = " (+10)"
   fields += f"""-f "Spell Slots|{current_spellbook.slots_str(level)}" """
 elif command == "eat":
   title = f"{combatant_name} tries to eat {article} Goodberr{plural}"
@@ -59,6 +62,7 @@ elif command == "eat":
       current_character.modify_hp(number, overflow=False)
       target_info = target_info = f"{combatant_name} {current_character.hp_str()} (+{number})"
     current_character.mod_cc(cc, -number)
+    cc_mod = f" (-{number})"
   fields += effect
 elif command == "give":
   title = f"{combatant_name} tries to give {article} Goodberr{plural}"
@@ -72,6 +76,7 @@ elif command == "give":
       target_info = target_info = f"{target.name if target else target_name} {target.hp_str()} (+{number})"
     fields += f"""-f "{target.name if target else target_name}|**Healing**: {number}" """
     current_character.mod_cc(cc, -number)
+    cc_mod = f" (-{number})"
   fields += effect
 else:
   title = "Goodberry Help"
@@ -80,6 +85,6 @@ else:
 -title "{{title}}"
 {{f"""-desc "{description}" """ if description else ""}}
 {{fields}}
-{{f"""-f "{cc}|{current_character.cc_str(cc)}" """ if has_cc else ""}}
+{{f"""-f "{cc}|{current_character.cc_str(cc)}{cc_mod}" """ if has_cc else ""}}
 {{f"""-footer "{target_info}" """ if target_info else """-footer "Goodberry | PHB 246" """}}
 -color <color> -thumb <image>
