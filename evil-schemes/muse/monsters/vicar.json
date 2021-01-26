@@ -1,0 +1,19 @@
+{
+  "HorribleWailing": [
+    "-save", "wis",
+    "-dc", "17",
+    "-peffect", "Wailing",
+    "-pduration", "1",
+    "-effect", "Frightened",
+    "-title", "[name] uses Horrible Wailing!",
+    "-desc", "When Vicar Amelia takes damage, she can let out a horrible wailing sound, causing all creatures within 120 ft. who can hear her to make a DC 17 Wisdom saving throw or become frightened until the start of her next turn. If a creature's save is a success, they are immune to her horrible wailing for 24 hours."
+  ],
+  "PrayerStrike": [
+    "-save", "dex",
+    "-dc", "17",
+    "-d", "4d8[force]", "half",
+    "-effect", "Prone",
+    "-title", "[name] uses Prayer Strike!",
+    "-desc", "Every creature within 10 ft. of Vicar Amelia must make a DC 17 Dexterity saving throw or take 18 (4d8) damage and be knocked prone. On a successful save the creature takes half that and is not knocked prone."
+  ]
+}
