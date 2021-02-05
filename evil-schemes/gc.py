@@ -35,6 +35,7 @@ skill = argv[0] if argv else ""
 init = combat()
 party = init.combatants if init else []
 dc = int(args.last("dc")) if args.last("dc") else None
+proficient = "prof" in argv
 
 fields = f"""-f "Meta|**DC**: {dc}" """ if dc else ""
 passed = 0
@@ -42,6 +43,9 @@ passed = 0
 if skill:
   for member in party:
     member_skill = member.skills[skill]
+    if proficient and member_skill.prof < 1:
+      fields += f"""-f "{member.name}|Not proficient." """
+      continue
     member_skill_roll = vroll(member_skill.d20())
     member_passed = "; Pass" if dc and member_skill_roll.total >= dc else "; Fail" if dc else ""
     fields += f"""-f "{member.name}|{member_skill_roll}{member_passed}" """
