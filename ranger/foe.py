@@ -21,7 +21,15 @@ fields = ""
 cc_used = ""
 target_info = ""
 
-if command == "help":
+if command == "cc":
+  char.create_cc(cc, minVal=0, maxVal=char.stats.prof_bonus, reset='long', type='bubble')
+  fields += f"""-f "Favored Foe|*1st-level ranger feature, which replaces the Favored Enemy feature and works with the Foe Slayer feature*
+When you hit a creature with an attack roll, you can call on your mystical bond with nature to mark the target as your favored enemy for 1 minute or until you lose your concentration (as if you were concentrating on a spell).
+The first time on each of your turns that you hit the favored enemy and deal damage to it, including when you mark it, you can increase that damage by 1d4.
+You can use this feature to mark a favored enemy a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.
+This feature’s extra damage increases when you reach certain levels in this class: to 1d6 at 6th level and to 1d8 at 14th level." """
+  fields += f"""-f "{cc}|{char.cc_str(cc)}" """
+elif command == "help":
   title = "Favored Foe"
   fields += """-f "Usage|**Deal Extra Damage**
 `!init attack shortsword -t TA1 foe`
@@ -46,6 +54,10 @@ elif char_has_cc:
   fields += f"""-f "Effect|When you hit a creature with an attack roll, you can call on your mystical bond with nature to mark the target as your favored enemy for 1 minute or until you lose your concentration (as if you were concentrating on a spell).
 The first time on each of your turns that you hit the favored enemy and deal damage to it, including when you mark it, you can increase that damage by 1d{4 if ranger_level < 6 else 6 if ranger_level < 14 else 8}." """
   fields += f"""-f "{cc}|{char.cc_str(cc) if char_has_cc else "N/A"} (-1)" """
+else:
+  title = "Favored Foe"
+  fields += """-f "Set up CCs|`!foe cc`" """
+  fields += f"""-f "{cc}|{char.cc_str(cc) if char_has_cc else "N/A"}" """
 </drac2>
 -title "{{title}}"
 {{fields}}
