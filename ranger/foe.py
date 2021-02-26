@@ -17,17 +17,19 @@ me = init.me if init else None
 name = me.name if me else char.name if char else name
 
 title = f"{char.name if char else name} marks a Favored Foe"
+desc = ""
 fields = ""
 cc_used = ""
 target_info = ""
 
 if command == "cc":
-  char.create_cc(cc, minVal=0, maxVal=char.stats.prof_bonus, reset='long', type='bubble')
-  fields += f"""-f "Favored Foe|*1st-level ranger feature, which replaces the Favored Enemy feature and works with the Foe Slayer feature*
+  char.create_cc(cc, minVal=0, maxVal=char.stats.prof_bonus, reset='long', dispType='bubble')
+  title = "Favored Foe"
+  desc = """*1st-level ranger feature, which replaces the Favored Enemy feature and works with the Foe Slayer feature*
 When you hit a creature with an attack roll, you can call on your mystical bond with nature to mark the target as your favored enemy for 1 minute or until you lose your concentration (as if you were concentrating on a spell).
 The first time on each of your turns that you hit the favored enemy and deal damage to it, including when you mark it, you can increase that damage by 1d4.
 You can use this feature to mark a favored enemy a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.
-This feature’s extra damage increases when you reach certain levels in this class: to 1d6 at 6th level and to 1d8 at 14th level." """
+This feature’s extra damage increases when you reach certain levels in this class: to 1d6 at 6th level and to 1d8 at 14th level."""
   fields += f"""-f "{cc}|{char.cc_str(cc)}" """
 elif command == "help":
   title = "Favored Foe"
@@ -61,5 +63,6 @@ else:
 </drac2>
 -title "{{title}}"
 {{fields}}
+{{f"""-desc "{desc}" """ if desc else ""}}
 -footer "{{target_info if target_info else "Favored Foe | TCoE"}}"
 -color <color> -thumb <image>
