@@ -3,7 +3,9 @@ embed
 argv = &ARGS&
 args = argparse(argv)
 init = combat()
-current = init.current if init else character()
+current = init.current if init and init.current.type == "combatant" else character()
+if args.last("as"):
+  current = init.get_combatant(args.last("as")) if init else current
 name = current.name if current else name
 
 shove_adv = "adv" in argv
