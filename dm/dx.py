@@ -19,3 +19,4 @@ for target_name in args.get("t"):
 -title "Applying Damage"
 {{fields}}
 -footer "!dx | kbsletten#5710"
+-color <color>

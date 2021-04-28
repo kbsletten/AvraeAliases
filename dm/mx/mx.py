@@ -42,3 +42,4 @@ for target_name in args.get("t"):
 -title "Moving by ({{horizontal_movement}}, {{vertical_movement}}) [{{0 if not horizontal_movement + vertical_movement else int(sqrt(horizontal_movement * horizontal_movement + vertical_movement * vertical_movement)) * 5}} ft.]"
 {{fields}}
 -footer "!mx | kbsletten#5710"
+-color <color>
