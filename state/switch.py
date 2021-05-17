@@ -39,7 +39,7 @@ if loaded_state:
 
 </drac2>
 -title "Switch States"
-{{f"""-f "State Saved!|Saved state: {current_state}" """ if current_state else """-f "Previous State|(not set)" """}
+{{f"""-f "State Saved!|Saved state: {current_state}" """ if current_state else """-f "Previous State|(not set)" """}}
 {{f"""-f "State Loaded!|Loaded state: {new_state}" """ if loaded_state else """-f "No Name Provided|`!state switch <NAME (e.g. \\"Side Quest\\")>"` """}}
 -f "HP|{{char.hp}}|inline" -f "THP|{{char.temp_hp}}|inline"
 {{' '.join([f"""-f "Level {l}|{char.spellbook.get_slots(l)}|inline" """ for l in range(1, 10) if char.spellbook.get_max_slots(l)])}}
