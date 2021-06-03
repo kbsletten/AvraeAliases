@@ -1,0 +1,4 @@
+Remove combatants from the map.
+
+**Allow more border around the combatants**
+`!mx fit -b 5`
