@@ -33,25 +33,6 @@ rewards = [r for r in [
 
 reward = rewards[len(rewards) - 1] if rewards else None
 reward_roll = vroll(reward[1]) if reward else None
-
-complications = [
-  "The item is a fake, planted by an enemy.",
-  "The item is stolen by the party’s enemies.",
-  "The item is cursed by a god.",
-  "The item’s original owner will kill to reclaim it; the party’s enemies spread news of its sale.",
-  "The item is at the center of a dark prophecy.",
-  "The seller is murdered before the sale.",
-  "The seller is a devil looking to make a bargain.",
-  "The item is the key to freeing an evil entity.",
-  "A third party bids on the item, doubling its price.",
-  "The item is an enslaved, intelligent entity.",
-  "The item is tied to a cult.",
-  "The party’s enemies spread rumors that the item is an artifact of evil."
-]
-
-complications_roll = vroll("1d100")
-complication = f"""||{complications[vroll(f"1d{len(complications)}").total - 1]}||""" if complications_roll.total <= 10 else "None"
-
 </drac2>
 -title "Downtime Activity: Buying a Magic Item"
 -f "Cost|{{cost*100}}gp|inline"
@@ -59,7 +40,5 @@ complication = f"""||{complications[vroll(f"1d{len(complications)}").total - 1]}
 {{f"""-f "Bonus|+{bonus}|inline" """ if bonus > 0 else ""}}
 -f "Charisma (Persuasion)|{{persuasion_roll}}"
 -f "Reward|{{f"{reward_roll} rolls on Magic Item Table {reward[2]} (`!mitable {reward[2]} {reward_roll.total}`)" if reward else "None"}}"
--f "Complication|{{complications_roll}}
-{{complication}}"
 -footer "!buy | kbsletten#5710"
 -color <color> -thumb <image>
