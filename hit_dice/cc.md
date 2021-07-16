@@ -1,0 +1,1 @@
+Run `!level` or `!hd cc` to create the CCs for your character based on class and level. If you need to set this up manually, the command is `!cc create 'Hit Dice (d#)' -min 0 -max CLASS_LEVEL`.
