@@ -1,0 +1,66 @@
+{
+  "name": "Loremaster",
+  "ac": 13,
+  "primary": "cha",
+  "saves": ["dex", "cha"],
+  "skills": ["arcana", "history", "performance"],
+  "attack": {
+    "name": "Scimitar",
+    "automation": [
+      {
+        "type": "target",
+        "target": "each",
+        "effects": [
+          {
+            "type": "attack",
+            "hit": [
+              {
+                "type": "damage",
+                "damage": "1d6+3[slashing]"
+              }
+            ],
+            "miss": [],
+            "attackBonus": "6"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "*Melee Weapon Attack:* +6 to hit, reach 5 ft., one target. *Hit:* 6 (1d8 + 2) slashing damage."
+      }
+    ],
+    "_v": 2,
+    "verb": "commands their Retainer to attack with"
+  },
+  "actions": [
+    {
+      "level": 3,
+      "cc": "Retainer Insult",
+      "cc_max": 3,
+      "attack": {
+        "name": "Insult",
+        "automation": [
+          {
+            "type": "roll",
+            "dice": "1d6",
+            "name": "Reduction"
+          },
+          {
+            "type": "text",
+            "text": "After a creature the loremaster can see within 60 feet makes an attack, ability check, or damage roll, the loremaster can roll a d6 and subtract the result from that creature’s result."
+          },
+          {
+            "type": "counter",
+            "counter": "Retainer Insult",
+            "amount": "1",
+            "allowOverflow": false,
+            "errorBehaviour": "warn"
+          }
+        ],
+        "_v": 2,
+        "proper": false,
+        "verb": "commands their Retainer to hurl"
+      }
+    }
+  ]
+}
