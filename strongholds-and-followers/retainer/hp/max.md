@@ -1,0 +1,1 @@
+Set your retainer's HP to the maximum value.
