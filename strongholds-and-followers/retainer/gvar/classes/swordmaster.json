@@ -1,0 +1,86 @@
+{
+  "gvar": "94108ce0-50fb-4d9f-85be-5f362662f260",
+  "name": "Swordmaster",
+  "ac": 18,
+  "primary": "str",
+  "saves": ["str", "con"],
+  "skills": ["athletics", "survival"],
+  "attack": {
+    "name": "Signature Attack",
+    "automation": [
+      {
+        "type": "target",
+        "target": "each",
+        "effects": [
+          {
+            "type": "attack",
+            "hit": [
+              {
+                "type": "damage",
+                "damage": "2d8+2[slashing]"
+              }
+            ],
+            "miss": [],
+            "attackBonus": "6"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "*Melee Weapon Attack:* +6 to hit, reach 5 ft., one target. *Hit:* 11 (2d8 + 2) slashing damage."
+      }
+    ],
+    "_v": 2,
+    "verb": "commands their Retainer to attack with"
+  },
+  "actions": [
+    {
+      "level": 3,
+      "cc": "Retainer Gaping Wound",
+      "cc_max": 3,
+      "attack": {
+        "name": "Gaping Wound",
+        "automation": [
+          {
+            "type": "target",
+            "target": "each",
+            "effects": [
+              {
+                "type": "attack",
+                "hit": [
+                  {
+                    "type": "damage",
+                    "damage": "2d8+2[slashing]+1d8[necrotic]"
+                  }
+                ],
+                "miss": [],
+                "attackBonus": "6"
+              },
+              {
+                "type": "ieffect",
+                "name": "Bleeding",
+                "duration": "-1",
+                "effects": "",
+                "end": false,
+                "desc": "You start bleeding, taking 3 (1d6) necrotic damage at the start of each of your turns. At the end of each of your turns, you can make a Constitution save to stop the bleeding."
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "*Melee Weapon Attack:* +6 to hit, reach 5 ft., one target. *Hit:* 11 (2d8 + 2) slashing damage.\nThe swordmaster makes an attack with their signature attack against an adjacent creature. On a hit, the target starts bleeding, taking 3 (1d6) necrotic damage at the start of each of its following turns. At the end of each of its turns, it can make a Constitution save to stop the bleeding."
+          },
+          {
+            "type": "counter",
+            "counter": "Retainer Gaping Wound",
+            "amount": "1",
+            "allowOverflow": false,
+            "errorBehaviour": "warn"
+          }
+        ],
+        "_v": 2,
+        "verb": "commands their Retainer to cause"
+      }
+    }
+  ]
+}

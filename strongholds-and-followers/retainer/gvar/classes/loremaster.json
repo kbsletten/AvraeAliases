@@ -1,11 +1,12 @@
 {
+  "gvar": "e3076b4f-6aaa-42ba-9f74-953cfa15b235",
   "name": "Loremaster",
   "ac": 13,
   "primary": "cha",
   "saves": ["dex", "cha"],
   "skills": ["arcana", "history", "performance"],
   "attack": {
-    "name": "Scimitar",
+    "name": "Signature Attack",
     "automation": [
       {
         "type": "target",
@@ -16,7 +17,7 @@
             "hit": [
               {
                 "type": "damage",
-                "damage": "1d6+3[slashing]"
+                "damage": "1d8+2[slashing]"
               }
             ],
             "miss": [],

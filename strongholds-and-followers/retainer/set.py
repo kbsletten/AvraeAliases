@@ -52,12 +52,14 @@ set_image = args.last("image", ret_image)
 
 ret_hp = min(set_level, set_level if ret_hp is None else ret_hp)
 
+cl_info = [c for c in CLASSES if set_class.lower() in c["name"].lower()]
+cl_info = cl_info[0] if cl_info else None
+
+set_class = cl_info["name"] if cl_info else None
+
 title = f"{char.name} doesn't have a retainer!"
 if set_name and set_class and set_level:
   title = f"{char.name} has {set_name} a level {set_level} {set_class} retainer!"
-
-cl_info = [c for c in CLASSES if c["name"] == set_class]
-cl_info = cl_info[0] if cl_info else None
 
 if char:
   char.set_cvar("_retainerName", set_name)
