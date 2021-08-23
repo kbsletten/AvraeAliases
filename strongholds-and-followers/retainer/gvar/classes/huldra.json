@@ -1,0 +1,77 @@
+!gvar edit 1e86a90e-cd02-4ce9-a91c-4ea5ac1385b0 {
+  "gvar": "1e86a90e-cd02-4ce9-a91c-4ea5ac1385b0",
+  "name": "Huldra",
+  "ac": 15,
+  "primary": "cha",
+  "saves": ["wis", "cha"],
+  "skills": ["nature", "stealth"],
+  "attack": {
+    "name": "Signature Attack",
+    "automation": [
+      {
+        "type": "target",
+        "target": "each",
+        "effects": [
+          {
+            "type": "attack",
+            "hit": [
+              {
+                "type": "damage",
+                "damage": "1d8[fire]"
+              }
+            ],
+            "miss": [],
+            "attackBonus": "6"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "*Ranged Spell Attack:* +6 to hit, range 30 ft., one target. *Hit:* 4 (1d8) fire damage."
+      }
+    ],
+    "_v": 2,
+    "verb": "commands their Retainer to attack with"
+  },
+  "actions": [
+    {
+      "level": 3,
+      "cc": "Retainer Minor Heal",
+      "cc_max": 5,
+      "attack": {
+        "name": "Minor Heal",
+        "automation": [
+          {
+            "type": "roll",
+            "dice": "1d8+3",
+            "name": "Healing"
+          },
+          {
+            "type": "target",
+            "target": "all",
+            "effects": [
+              {
+                "type": "damage",
+                "damage": "-{Healing}"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "A creature the Huldra can see within 30 ft. regains 7 (1d8+3) hit points."
+          },
+          {
+            "type": "counter",
+            "counter": "Retainer Minor Heal",
+            "amount": "1",
+            "allowOverflow": false,
+            "errorBehaviour": "warn"
+          }
+        ],
+        "_v": 2,
+        "proper": true,
+        "verb": "commands their Retainer to cast"
+      }
+    }
+  ]
+}

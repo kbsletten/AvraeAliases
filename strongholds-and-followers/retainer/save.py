@@ -86,18 +86,18 @@ for i in range(1, reroll + 1):
     2: "3d20kh1"
   }[adv]
   bonus = base_bonus + args.get(f"b{i}")
-  check_roll = vroll("+".join([save] + bonus))
+  save_roll = vroll("+".join([save] + bonus))
   if dc:
-    if check_roll.total >= dc:
+    if save_roll.total >= dc:
       success += 1
       harm += int(floor(level / 2))
     else:
       failure += 1
       harm += level
   if reroll == 1:
-    desc += f"{check_roll}"
+    desc += f"{save_roll}"
   else:
-    fields += f"""-f "Check {i}|{check_roll}|inline" """
+    fields += f"""-f "Save {i}|{save_roll}|inline" """
 
 fields += "\n".join([f"""-f "{field}" """ for field in args.get("f")])
 
@@ -109,5 +109,5 @@ if harm and char and char.cc_exists("Retainer HP"):
 {{f"""-phrase "{args.last("phrase")}" """ if args.last("phrase") else ""}}
 {{f"""-desc "{desc}" """ if desc else ""}}
 {{fields}}
--footer "{{f"""{ret_name} {char.cc_str("Retainer HP")} (-{harm})""" if level and char and char.cc_exists("Retainer HP") else f"{success} Successes | {failure} Failures" if reroll > 1 and dc else "Success!" if success else "Failure!" if failure  else "!retainer save | kbsletten#5710"}}"
+-footer "{{f"""{ret_name} {char.cc_str("Retainer HP")}{f" (-{harm})" if harm else ""}""" if level and char and char.cc_exists("Retainer HP") else f"{success} Successes | {failure} Failures" if reroll > 1 and dc else "Success!" if success else "Failure!" if failure  else "!retainer save | kbsletten#5710"}}"
 -color <color> -thumb {{get("_retainerImage") if "-h" not in argv else ""}}
