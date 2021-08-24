@@ -63,16 +63,19 @@ base_bonus = [str(ret_bonus)] + args.get("b") + ([effect.effect["sb"] for effect
 
 reroll = max(1, int(args.last("rr", 1)))
 dc = int(args.last("dc")) if args.last("dc") else None
+level = max(0, int(args.last("l")) if args.last("l") else 0)
+harm = 0
+
+if level:
+  desc += f"""**Level {level}**
+"""
 
 if dc:
-  desc = f"""**DC {dc}**
+  desc += f"""**DC {dc}**
 """
 
 success = 0
 failure = 0
-
-level = max(0, int(args.last("l")) if args.last("l") else 0)
-harm = 0
 
 for i in range(1, reroll + 1):
   has_adv = "adv" in argv or f"adv{i}" in argv
@@ -87,17 +90,24 @@ for i in range(1, reroll + 1):
   }[adv]
   bonus = base_bonus + args.get(f"b{i}")
   save_roll = vroll("+".join([save] + bonus))
+  roll_harm = ""
   if dc:
     if save_roll.total >= dc:
       success += 1
       harm += int(floor(level / 2))
+      roll_harm = f"""
+**Harm**
+({level}) / 2 = `{int(floor(level / 2))}`"""
     else:
       failure += 1
       harm += level
+      roll_harm = f"""
+**Harm**
+{level} = `{level}`"""
   if reroll == 1:
-    desc += f"{save_roll}"
+    desc += f"{save_roll}{roll_harm}"
   else:
-    fields += f"""-f "Save {i}|{save_roll}|inline" """
+    fields += f"""-f "Save {i}|{save_roll}{roll_harm}|inline" """
 
 fields += "\n".join([f"""-f "{field}" """ for field in args.get("f")])
 
