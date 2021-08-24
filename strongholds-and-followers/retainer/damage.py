@@ -47,7 +47,7 @@ desc += f"{check_roll}"
 
 harm = 0
 if dc and check_roll.total < dc:
-  harm = int(args.last("d", 1))
+  harm = 2 if "crit" in args else 1
 
 if harm:
   char.mod_cc("Retainer HP", -harm)
@@ -56,5 +56,5 @@ if harm:
 {{f"""-phrase "{args.last("phrase")}" """ if args.last("phrase") else ""}}
 {{f"""-desc "{desc}" """ if desc else ""}}
 {{fields}}
--footer "{{f"""{ret_name} {char.cc_str("Retainer HP")} (-{harm})""" if level and char and char.cc_exists("Retainer HP") else "!retainer damage | kbsletten#5710"}}"
+-footer "{{f"""{ret_name} {char.cc_str("Retainer HP")}{f" (-{harm})" if harm else ""}""" if level and char and char.cc_exists("Retainer HP") else "!retainer damage | kbsletten#5710"}}"
 -color <color> -thumb {{get("_retainerImage") if "-h" not in argv else ""}}

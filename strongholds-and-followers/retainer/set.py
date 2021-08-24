@@ -70,6 +70,8 @@ if char:
 If they succeed, they take no damage. If they fail, they lose one health level per die of damage from the attack. If they lose their final health level, they drop unconscious and use the normal rules for dying.
 They save against spells just like PCs do, but if they succeed on a save, they lose health levels equal to half the spell level. If they fail they lose heath levels equal to the spell level. So a retainer who saves against a fireball (3rd-level spell) loses 1 health level (3 rounded down).""")
   char.set_cc("Retainer HP", ret_hp)
+  char.create_cc("Retainer HD", minVal=0, maxVal=set_level, dispType='bubble', reset='long', resetBy=min(1, int(floor(set_level/2))), desc="""A retainer can spend one or more Hit Dice at the end of a short rest, up to the retainer’s maximum number of Hit Dice, which is equal to the retainer’s level. For each Hit Die spent in this way, the retainer regains one Health Level. At the end of a long rest, a retainer regains spent Hit Dice, up to a number of dice equal to half of the retainer's total number of them (minimum of one die).""")
+  char.set_cc("Retainer HD", set_level)
 
 fields = ""
 

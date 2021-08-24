@@ -1,0 +1,91 @@
+{
+  "gvar": "2d314bbc-d29d-43d8-933e-ad5e589a28a8",
+  "name": "Assassin",
+  "ac": 13,
+  "primary": "dex",
+  "saves": ["dex", "int"],
+  "skills": ["acrobatics", "athletics", "sleightofhand", "stealth"],
+  "attack": {
+    "name": "Signature Attack",
+    "automation": [
+      {
+        "type": "target",
+        "target": "each",
+        "effects": [
+          {
+            "type": "attack",
+            "hit": [
+              {
+                "type": "damage",
+                "damage": "2d6+3[piercing]"
+              }
+            ],
+            "miss": [],
+            "attackBonus": "6"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "text": "*Ranged Weapon Attack:* +6 to hit, range 80/320 ft., one target. *Hit:* 10 (2d6+3) piercing damage."
+      }
+    ],
+    "_v": 2,
+    "verb": "commands their Retainer to attack with"
+  },
+  "actions": [
+    {
+      "level": 3,
+      "cc": "Retainer Assassinate",
+      "cc_max": 3,
+      "attack": {
+        "name": "Assassinate",
+        "automation": [
+          {
+            "type": "target",
+            "target": "each",
+            "effects": [
+              {
+                "type": "attack",
+                "hit": [
+                  {
+                    "type": "condition",
+                    "condition": "lastAttackDidCrit",
+                    "onTrue": [
+                      {
+                        "type": "damage",
+                        "damage": "2d6+3[piercing]"
+                      }
+                    ],
+                    "onFalse": [
+                      {
+                        "type": "damage",
+                        "damage": "4d6+3[piercing]"
+                      }
+                    ]
+                  }
+                ],
+                "miss": [],
+                "attackBonus": "6"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "*Ranged Weapon Attack:* +6 to hit, range 80/320 ft., one target. *Hit:* 10 (2d6+3) piercing damage."
+          },
+          {
+            "type": "counter",
+            "counter": "Retainer Assassinate",
+            "amount": "1",
+            "allowOverflow": false,
+            "errorBehaviour": "warn"
+          }
+        ],
+        "_v": 2,
+        "proper": true,
+        "verb": "commands their Retainer to"
+      }
+    }
+  ]
+}
