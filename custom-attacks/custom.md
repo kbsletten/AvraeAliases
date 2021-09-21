@@ -1,30 +1,25 @@
-Create a custom attack.
+Manage custom attacks and abilities for players and monsters.
 
--b <bonus> - to hit bonus (uses variables like `strengthMod` and `proficiencyBonus`)
--cc <counter> - a custom counter to decrement by `ccnum` when the attack is used
--ccerr <warn/error> - change the error behavior of the `cc` (default `warn`)
--ccnum <number> - the amount to decrement the `cc` by
-ccovf - allow the `cc` to overflow (or underflow) its max and min values
--d <damage> - damage (uses variables like `strengthMod` and `proficiencyBonus`)
--dc <save DC> - difficulty class of the save
--effect <"[name]|[effects]"> - applies the specified effect on a hit or failed save
-half - deal half damage on save
--mod <modifier> - the modifier to use for attack and damage rolls (uses variables like `strengthMod+1`)
--name <name> - the name of the attack
-nopro - don't add the proficiency bonus (used with the `mod` option)
-proper - the attack is a proper noun
--save <str/dex/con/int/wis/cha> - the ability to make the save with (shortened like `str`)
--verb <verb> - the verb to use with the attack
+**Save an Attack for Later**
+`!custom save Bite attack 4 hit damage 2d4+2[piercing] save str 11 effect Prone`
 
+**Use the Attack in Initiative**
+`!custom Bite -t GO1`
 
-**Add a weapon attack**
-`!custom -name "Longsword+1" -mod "strengthMod+1" -d "1d8[slashing]"`
+**Effect Syntax**
+These can be used on any of `hit`, `miss`, `crit`, `save`, `fail` or `fail5`
+`damage <damage dice>` - deals damage to the creature
+`effect <effect name>` - adds an effect
 
-**Add a finesse attack**
-`!custom -name "Rapier+2" -mod "max(strengthMod, dexterityMod)+2" -d "1d8[piercing]"`
+**Attack Syntax**
+`attack <to hit>` - adds an attack with a to-hit bonus
+`hit` - specifies what to do when the attack hits
+`miss` - specifies what to do if the attack misses (e.g. Acid Arrow)
+`crit` - specifies what to do if the attack is a critical hit
 
-**Add a save on hit**
-`!custom -name "Walloping Maul" -mod "strengthMod" -d "2d6" -save str -dc 10 -effect "Prone"`
-
-**Add a CC usage**
-`!custom -name "Breath Weapon" -cc "Breath Weapon" -d "{5 if level > 15 else 4 if level > 10 else 3 if level > 6 else 2}d6[fire]" -save dex -dc "8+constitutionMod+proficiencyBonus" half`
+ **Save Syntax**
+`save <ability> <dc>` - forces the targeted creature to make a save, if you use `attack` and `save` together, only creatures who are hit will save
+`fail5` - specifies what to do if the target fails by 5 or more
+`fail` - specifies what to do if the target fails
+`pass` - specifies what to do if the target passes
+ - `half` - deals half the damage the creature would have taken
