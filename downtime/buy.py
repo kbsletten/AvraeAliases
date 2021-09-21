@@ -6,6 +6,7 @@ char = character()
 weeks = max(1, int(args.last("weeks", 0)))
 cost = floor(max(100, int(args.last("cost", 0)))/100)
 bonus = min(weeks - 1 + cost - 1, 10)
+dc = int(args.last("dc", 100))
 
 base_adv = args.adv(boolwise=True)
 
@@ -29,7 +30,7 @@ rewards = [r for r in [
   (31, "1d4", "G"),
   (36, "1d4", "H"),
   (41, "1d4", "I"),
-] if r[0] <= persuasion_roll.total]
+] if r[0] <= min(dc, persuasion_roll.total)]
 
 reward = rewards[len(rewards) - 1] if rewards else None
 reward_roll = vroll(reward[1]) if reward else None
