@@ -1,6 +1,8 @@
 {
   "gvar": "1e86a90e-cd02-4ce9-a91c-4ea5ac1385b0",
   "name": "Huldra",
+  "stats": "Druid Retainer",
+  "hp": 7,
   "ac": 15,
   "primary": "cha",
   "saves": ["wis", "cha"],
