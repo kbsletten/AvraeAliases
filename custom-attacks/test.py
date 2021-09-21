@@ -176,4 +176,4 @@ for target_expr in args.get("t"):
 </drac2>
 -title "{{title}}"
 {{fields}}
--footer "{{target_info or "!custom_attack attack | kbsletten#5710"}}"
+-footer "{{target_info or "!custom_attack test | kbsletten#5710"}}"
