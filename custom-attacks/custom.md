@@ -23,4 +23,4 @@ Wolf Bite - `!custom_attack test attack 4 hit damage 2d4+2[piercing] save str 11
 
 Dragonborn Breath - `!custom_attack test save dex 11 fail damage 2d6[fire] pass half -t TARGET`
 
-Quasit Bite - `!custom_attack test attack 4 hit damage 1d4+3[piercing] save con 10 fail damage 2d4[poison] effect Poisoned -t TARGET`
+Quasit Claw - `!custom_attack test attack 4 hit damage 1d4+3[piercing] save con 10 fail damage 2d4[poison] effect Poisoned -t TARGET`
