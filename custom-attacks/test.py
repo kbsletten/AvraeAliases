@@ -27,7 +27,7 @@ if index < len(argv) and argv[index] == "save":
   index += 1
   json["save"] = { "ability": argv[index] }
   index += 1
-  json["save"]["dc"] = int(argv[index])
+  json["save"]["dc"] = argv[index]
   index += 1
   for save in SAVE:
     if index < len(argv) and argv[index] == save:
@@ -40,7 +40,7 @@ if index < len(argv) and argv[index] == "save":
           index += 1
       if index < len(argv) and argv[index] == "half":
         index += 1
-        json["save"][save]["damage"] = "({Damage})/2"
+        json["save"][save]["damage"] = "({Damage})/2" if "attack" not in json else f"""({json["save"]["fail"]["damage"]})/2"""
 # END parse.py
 
 argv = argv[index:]
@@ -79,7 +79,7 @@ save_dc = None
 save_damage = None
 if "save" in json:
   save_ability = json["save"]["ability"] if "ability" in json["save"] else "dex"
-  save_dc = json["save"]["dc"] if "dc" in json["save"] else 10
+  save_dc = int(json["save"]["dc"]) if "dc" in json["save"] else 10
   if "fail" in json["save"] and "damage" in json["save"]["fail"] and "attack" not in json:
     save_damage = vroll(json["save"]["fail"]["damage"])
 
