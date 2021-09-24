@@ -60,7 +60,8 @@ if save_dc or save_damage:
 for target_expr in args.get("t"):
   target_name, _, target_argv = target_expr.partition("|")
   target_group = init.get_group(target_name) if init else None
-  target_combatants = target_group.combatants if target_group else [init.get_combatant(target_name)] if init else []
+  target_combatant = [init.get_combatant(target_name)] if init and init.get_combatant(target_name) else []
+  target_combatants = target_group.combatants if target_group else target_combatant if init else []
   for target in target_combatants:
     hit = False
     save_bonus = args.get("sb")
