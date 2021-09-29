@@ -77,6 +77,7 @@ fields = ""
 
 save_dc = None
 save_damage = None
+save_ability = None
 if "save" in json:
   save_ability = json["save"]["ability"] if "ability" in json["save"] else "dex"
   save_dc = int(json["save"]["dc"]) if "dc" in json["save"] else 10
@@ -111,76 +112,82 @@ for target_expr in args.get("t"):
     if "sdis" in argv:
       save_modifier = -1 if save_modifier == None or save_modifier == -1 else 0
     
-    damage_roll = None
-    effect = None
-    bonus_damage_roll = None
+    summary = []
+    for _ in range(0, int(args.last("rr", 1))):
+      damage_roll = None
+      effect = None
+      bonus_damage_roll = None
+      attack_roll = None
+      crit = False
 
-    attack_roll = None
-    if "attack" in json:
-      attack_roll = vroll("+".join([
-        "3d20kh1" if modifier == 2 else
-        "2d20kh1" if modifier == 1 else
-        "2d20kl1" if modifier == -1 else
-        "1d20",
-        json["attack"]["bonus"]
-      ] + hit_bonus))
-      auto_hit = "hit" in argv
-      auto_crit = "crit" in argv
-      auto_miss = "miss" in argv
-      crit = auto_crit or attack_roll.result.crit == 1
-      hit = auto_hit or not auto_miss and (attack_roll.result.crit == 1 or attack_roll.result.crit != 2 and attack_roll.total >= target.ac)
-      if hit:
-        damage_roll = "+".join([json["attack"]["hit"]["damage"]] + damage_bonus) if "damage" in json["attack"]["hit"] else None
-        if crit and "crit" in json["attack"]:
-          if "damage" in json["attack"]["crit"]:
-            bonus_damage_roll = json["attack"]["crit"]["damage"]
-          if "effect" in json["attack"]["crit"]:
-            effect = json["attack"]["crit"]["effect"]
-        elif "effect" in json["attack"]["hit"]:
-          effect = json["attack"]["hit"]["effect"]
-      elif "miss" in json["attack"]:
-        damage_roll = "+".join([json["attack"]["miss"]["damage"]] + damage_bonus) if "damage" in json["attack"]["miss"] else None
-        if "effect" in json["attack"]["miss"]:
-          effect = json["attack"]["miss"]["effect"]
+      if "attack" in json:
+        attack_roll = vroll("+".join([
+          "3d20kh1" if modifier == 2 else
+          "2d20kh1" if modifier == 1 else
+          "2d20kl1" if modifier == -1 else
+          "1d20",
+          json["attack"]["bonus"]
+        ] + hit_bonus))
+        auto_hit = "hit" in argv
+        auto_crit = "crit" in argv
+        auto_miss = "miss" in argv
+        crit = auto_crit or attack_roll.result.crit == 1
+        hit = auto_hit or not auto_miss and (attack_roll.result.crit == 1 or attack_roll.result.crit != 2 and attack_roll.total >= target.ac)
+        if hit:
+          damage_roll = "+".join([json["attack"]["hit"]["damage"]] + damage_bonus) if "damage" in json["attack"]["hit"] else None
+          if crit and "crit" in json["attack"]:
+            if "damage" in json["attack"]["crit"]:
+              bonus_damage_roll = json["attack"]["crit"]["damage"]
+            if "effect" in json["attack"]["crit"]:
+              effect = json["attack"]["crit"]["effect"]
+          elif "effect" in json["attack"]["hit"]:
+            effect = json["attack"]["hit"]["effect"]
+        elif "miss" in json["attack"]:
+          damage_roll = "+".join([json["attack"]["miss"]["damage"]] + damage_bonus) if "damage" in json["attack"]["miss"] else None
+          if "effect" in json["attack"]["miss"]:
+            effect = json["attack"]["miss"]["effect"]
 
-    save_roll = None
-    if "save" in json and (hit or "attack" not in json):
-      save_roll = target.save(save_ability, adv=True if save_modifier == 1 else False if save_modifier == -1 else None)
-      auto_pass = "pass" in argv
-      auto_fail = "fail" in argv
-      auto_fail5 = "fail4" in argv
-      fail = auto_fail or not auto_pass and save_roll.total < save_dc
-      fail5 = fail and auto_fail5 or save_roll.total < save_dc - 4 # DC 11: 6 is failing by 5
-      if fail:
-        if save_damage:
-          damage_roll = save_damage.consolidated() if save_damage else None
-        elif "fail" in json["save"] and "damage" in json["save"]["fail"]:
-          bonus_damage_roll = "+".join(x for x in [bonus_damage_roll, json["save"]["fail"]["damage"]] if x)
-        if fail5 and "fail5" in json["save"]:
-          if "effect" in json["save"]["fail5"]:
-            effect = json["save"]["fail5"]["effect"]
-        elif "fail" in json["save"] and "effect" in json["save"]["fail"]:
-            effect = json["save"]["fail"]["effect"]
-      elif "pass" in json["save"]:
-        if save_damage:
-          damage_roll = json["save"]["pass"]["damage"].replace("{Damage}", save_damage.consolidated() if save_damage else "0") if "damage" in json["save"]["pass"] else None
-        elif "damage" in json["save"]["pass"]:
-          bonus_damage_roll = "+".join(x for x in [bonus_damage_roll, json["save"]["pass"]["damage"]] if x)
-        if "effect" in json["save"]["pass"]:
-            effect = json["save"]["pass"]["effect"]
+      save_roll = None
+      if "save" in json and (hit or "attack" not in json):
+        save_roll = target.save(save_ability, adv=True if save_modifier == 1 else False if save_modifier == -1 else None)
+        auto_pass = "pass" in argv
+        auto_fail = "fail" in argv
+        auto_fail5 = "fail4" in argv
+        fail = auto_fail or not auto_pass and save_roll.total < save_dc
+        fail5 = fail and auto_fail5 or save_roll.total < save_dc - 4 # DC 11: 6 is failing by 5
+        if fail:
+          if save_damage:
+            damage_roll = save_damage.consolidated() if save_damage else None
+          elif "fail" in json["save"] and "damage" in json["save"]["fail"]:
+            bonus_damage_roll = "+".join(x for x in [bonus_damage_roll, json["save"]["fail"]["damage"]] if x)
+          if fail5 and "fail5" in json["save"]:
+            if "effect" in json["save"]["fail5"]:
+              effect = json["save"]["fail5"]["effect"]
+          elif "fail" in json["save"] and "effect" in json["save"]["fail"]:
+              effect = json["save"]["fail"]["effect"]
+        elif "pass" in json["save"]:
+          if save_damage:
+            damage_roll = json["save"]["pass"]["damage"].replace("{Damage}", save_damage.consolidated() if save_damage else "0") if "damage" in json["save"]["pass"] else None
+          elif "damage" in json["save"]["pass"]:
+            bonus_damage_roll = "+".join(x for x in [bonus_damage_roll, json["save"]["pass"]["damage"]] if x)
+          if "effect" in json["save"]["pass"]:
+              effect = json["save"]["pass"]["effect"]
 
-    effect_name, _, effect_args = effect.partition("|") if effect else [None, None, None]
-    target.add_effect(effect_name, effect_args)
-    damage = target.damage(damage_roll, crit=crit)["damage"] if damage_roll else None
-    bonus_damage = target.damage(bonus_damage_roll)["damage"] if bonus_damage_roll else None
-    summary = "\n".join(x for x in [
-      f"""**To Hit**: {"Automatic hit!" if auto_hit else "Automatic miss!" if auto_miss else attack_roll}""" if attack_roll else "",
-      damage if damage else '**Miss!**' if attack_roll else "",
-      f"""**{save_ability.upper()} save**: {"Automatic failure!" if auto_fail else "Automatic success!" if auto_pass else f'{save_roll}; {"Success!" if save_roll.total >= save_dc else "Failure!"}'}""" if save_roll else "",
-      f"**Effect**: {effect_name}" if effect_name else "",
-      bonus_damage if bonus_damage else ""
-    ] if x)
-    fields += f"""-f "{target.name}|{summary}" """
+      effect_name, _, effect_args = effect.partition("|") if effect else [None, None, None]
+      target.add_effect(effect_name, effect_args)
+      damage = target.damage(damage_roll, crit=crit)["damage"] if damage_roll else None
+      bonus_damage = target.damage(bonus_damage_roll)["damage"] if bonus_damage_roll else None
+      summary = summary + [
+        "\n".join(x for x in [
+          f"""**To Hit**: {"Automatic hit!" if auto_hit else "Automatic miss!" if auto_miss else attack_roll}""" if attack_roll else "",
+          damage if damage else '**Miss!**' if attack_roll else "",
+          f"""**{save_ability.upper()} save**: {"Automatic failure!" if auto_fail else "Automatic success!" if auto_pass else f'{save_roll}; {"Success!" if save_roll.total >= save_dc else "Failure!"}'}""" if save_roll else "",
+          f"**Effect**: {effect_name}" if effect_name else "",
+          bonus_damage if bonus_damage else ""
+        ] if x)
+      ]
+    result = summary[0] if len(summary) == 1 else "\n\n".join(f"**__Attack {i+1}__**\n{x}" for i, x in enumerate(summary))
+    fields += f"""-f "{target.name}|{result or "(no effect)"}" """
     target_info += f"{target.name} {target.hp_str()}\n" if damage else ""
 
 </drac2>
