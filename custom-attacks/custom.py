@@ -153,9 +153,9 @@ for target_expr in args.get("t"):
           bonus_damage if bonus_damage else ""
         ] if x)
       ]
+      target_info += f"{target.name} {target.hp_str()}\n" if damage else ""
     result = summary[0] if len(summary) == 1 else "\n\n".join(f"**__Attack {i+1}__**\n{x}" for i, x in enumerate(summary))
     fields += f"""-f "{target.name}|{result or "(no effect)"}" """
-    target_info += f"{target.name} {target.hp_str()}\n" if damage else ""
 #END test.py
 
 </drac2>
