@@ -1,0 +1,12 @@
+!embed
+-title "Per's Bandits"
+-desc "Green Light Human Infantry"
+-f "Attack|+3|inline"
+-f "Defense|12|inline"
+-f "Power|+2|inline"
+-f "Toughness|12|inline"
+-f "Morale|+0|inline"
+-f "Command|-1|inline"
+-f "Adaptable|This unit has advantage on Morale and Command tests."
+-f "Maneuver: Follow Up|As a reaction to an opposed unit adjacent to this unit breaking or moving out of its space, this unit makes a DC 8 Command test. On a success, this unit moves into the opposed unit’s former space."
+-f "Maneuver: Set for Charge|As a reaction to suffering a casualty from a cavalry or aerial unit, this unit makes a DC 13 Command test. On a success, the attacking unit suffers 1 casualty."
