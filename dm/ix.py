@@ -49,6 +49,9 @@ for target in targets:
   target.set_init(init_roll.total)
   fields += f"""-f "{roller.name}{f" (for {target.name})" if target.name != roller.name else ""}|{init_roll}|inline" """
 
+init. end_round()
+init.set_round(0)
+
 </drac2>
 -title "Rerolling Initiative"
 {{fields}}

@@ -5,7 +5,7 @@ args = argparse(&ARGS&)
 init = combat()
 targets = [(init.get_group(target), init.get_combatant(target)) for target in args.get("t")] if init else []
 if not args.get("t"):
-  targets = [(None, each) for each in init.combatants] if init else []
+  targets = [(None, each) for each in init.combatants if each.controller == ctx.author.id] if init else []
 
 fields = ""
 
