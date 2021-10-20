@@ -21,6 +21,8 @@ for die in [12, 10, 8, 6]:
     current_character.mod_cc(cc, mod)
     count -= mod
     fields += f"""-f "{cc}|{current_character.cc_str(cc)} (+{mod})" """
+  else:
+    fields += f"""-f "{cc}|{current_character.cc_str(cc)}" """
 </drac2>
 -title "{{combatant_name}} recovers Hit Dice"
 -description "At the end of a long rest, the character also regains spent Hit Dice, up to a number of dice equal to half of the character's total number of them (minimum of one die)."
