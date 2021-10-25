@@ -1,6 +1,7 @@
 embed
 <drac2>
-args = argparse(&ARGS&)
+argv = &ARGS&
+args = argparse(argv)
 init = combat()
 
 unit = init.current if init.current.controller == ctx.author.id else ([x for x in init.combatants if x.controller == ctx.author.id] + [None])[0]
@@ -15,7 +16,9 @@ unit_command = int(args.last("com", ([x for x in unit_notes if x.startswith("Com
 unit_damage = int(args.last("dam", ([x for x in unit_notes if x.startswith("Damage: ")] + ["Damage: 1"])[0][len("Damage: "):]))
 
 unit_effects = [e.name for e in unit.effects] if unit else []
+unit_art = "Artillery" in unit_effects
 unit_cav = "Cavalry" in unit_effects
+unit_inf = "Infantry" in unit_effects
 
 target = init.get_combatant(args.last("t")) if init and args.last("t") else None
 target_name = target.name if target else "Meta"
@@ -35,12 +38,31 @@ target_dim = "Diminished" in target_effects
 target_dr = "Damage Resistant" in target_effects
 target_rel = "Relentless" in target_effects
 target_ttd = "To the Death" in target_effects
-
-attack_roll = vroll(f"1d20+{unit_attack}")
-power_roll = vroll(f"1d20+{unit_power}")
+target_stal = "Stalwart" in target_effects
 
 fields = ""
 target_info = ""
+
+attack_adv = "adv" in argv or "aadv" in argv
+attack_dis = "dis" in argv or "adis" in argv
+attack_base = "2d20kh1" if attack_adv and not attack_dis else "2d20kl1" if attack_dis and not attack_adv else "1d20"
+attack_roll = vroll("+".join([attack_base, str(unit_attack)] +
+  args.get("a") +
+  (["-2[fort]"] if any([fort in target_effects for fort in ["City Wall"]]) else [])
+))
+
+power_adv = "adv" in argv or "padv" in argv
+power_dis = "dis" in argv or "pdis" in argv
+if target_stal and target_dim and (unit_inf or unit_cav):
+  power_dis = True
+  fields += """-f "Stalwart|While this unit is diminished, opposed infantry and cavalry units have disadvantage on Power tests against it." """
+  
+power_base = "2d20kh1" if power_adv and not power_dis else "2d20kl1" if power_dis and not power_adv else "1d20"
+power_roll = vroll("+".join([power_base, str(unit_power)] +
+  args.get("p") +
+  (["2[fort]"] if unit_art and any([fort in unit_effects for fort in ["City Wall"]]) else [])
+))
+
 rolls = f"""
 **Attack**: {attack_roll}
 **Power**: {power_roll}
@@ -67,7 +89,9 @@ if target:
 """
     if target.hp <= target.max_hp / 2:
       if not target_dim:
-        morale_roll = vroll(f"1d20+{target_morale}")
+        morale_roll = vroll("+".join(["1d20", str(target_morale)] + 
+          (["2[fort]"] if any([fort in target_effects for fort in ["City Wall"]]) else [])
+        ))
         rolls += f"""**Diminished**: {morale_roll}
 """
         target.add_effect("Diminished", "")
