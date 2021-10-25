@@ -1,4 +1,4 @@
-action import
+embed
 <drac2>
 # BEGIN parse.py
 KEYWORDS = ["damage", "effect"]
@@ -7,7 +7,7 @@ SAVE = ["fail", "fail5", "pass"]
 
 argv = &ARGS&
 json = {}
-index = 1
+index = 0
 
 if index < len(argv) and argv[index] == "attack":
   index += 1
@@ -139,4 +139,8 @@ automation = {
   "extra_crit_damage": json["attack"]["crit"]["damage"] if "attack" in json and "crit" in json["attack"] and "damage" in json["attack"]["crit"] else None
 }
 </drac2>
-{{dump_json(automation)}}
+-title "Export Attack!"
+-f "Save|{{dump_json(save_json).replace("\"", "\\\"").replace(": ", ":")}}"
+-f "Attack|{{dump_json(attack_json).replace("\"", "\\\"").replace(": ", ":")}}"
+-f "Automation|{{dump_json(automation).replace("\"", "\\\"").replace(": ", ":")}}"
+-footer "!custom_attack export | kbsletten#5710"
