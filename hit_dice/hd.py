@@ -75,13 +75,14 @@ elif count > 0:
     count -= dice
     current_character.mod_cc(cc, -dice)
     used += f"""-f "{cc}|{current_character.cc_str(cc)} (-{dice})" """
-  healing.append(con_healing)
-  healing.extend(args.get('b'))
-  healing_roll = vroll('+'.join(healing))
-  fields += f"""-f "Healing|{healing_roll}" """
-  current_combatant.modify_hp(healing_roll.total, overflow=False)
-  target_info = f"{combatant_name}: {current_combatant.hp_str()} (+{healing_roll.total})"
-  fields += used
+  if healing:
+    healing.append(con_healing)
+    healing.extend(args.get('b'))
+    healing_roll = vroll('+'.join(healing))
+    fields += f"""-f "Healing|{healing_roll}" """
+    current_combatant.modify_hp(healing_roll.total, overflow=False)
+    target_info = f"{combatant_name}: {current_combatant.hp_str()} (+{healing_roll.total})"
+    fields += used
 else:
   title = f"{combatant_name}'s current Hit Dice"
   description = ""
