@@ -7,7 +7,6 @@ char = character()
 init = combat()
 
 target = init.get_combatant(args.last("t")) if init and args.last("t") else init.me if init and init.me else init.current if init and init.current else None
-target = init.me if init and init.me else init.current if init and init.current else None
 
 name = target.name if target else char.name if char else name
 
