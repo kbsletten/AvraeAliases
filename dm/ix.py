@@ -41,9 +41,6 @@ for target in targets:
       roller = group[target.name]
     else:
       roller = target.combatants[0]
-      for comb in target.combatants[1:]:
-        if comb.initmod > roller.initmod:
-          roller = comb
   modifier = 0 + (1 if roller.name in adv else 0) + (-1 if roller.name in dis else 0)
   init_roll = vroll(place[roller.name] if roller.name in place else roller.skills.initiative.d20(base_adv=[False, None, True][modifier + 1]))
   target.set_init(init_roll.total)
