@@ -7,7 +7,7 @@ SAVE = ["fail", "fail5", "pass"]
 
 argv = &ARGS&
 json = {}
-index = 0
+index = 1
 
 if index < len(argv) and argv[index] == "attack":
   index += 1
@@ -140,7 +140,5 @@ automation = {
 }
 </drac2>
 -title "Export Attack!"
--f "Save|{{dump_json(save_json).replace("\"", "\\\"").replace(": ", ":")}}"
--f "Attack|{{dump_json(attack_json).replace("\"", "\\\"").replace(": ", ":")}}"
--f "Automation|{{dump_json(automation).replace("\"", "\\\"").replace(": ", ":")}}"
+-desc "{{dump_json(automation).replace("\"", "\\\"").replace(": ", ":")}}"
 -footer "!custom_attack export | kbsletten#5710"
