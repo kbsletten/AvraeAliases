@@ -3,7 +3,8 @@ embed
 argv = &ARGS&
 args = argparse(argv)
 command = argv[0] if argv else ""
-count = int(command) if command.isdigit() else 0
+command_count, _, command_die = command.partition("d")
+count = int(command_count) if command_count.isdigit() else 0
 
 current_character = character()
 current_combat=combat()
@@ -65,8 +66,10 @@ elif count > 0:
   used = ""
   con_healing = f"{con_mod*count}"
   for die in [12, 10, 8, 6]:
+    if command_die and str(die) != command_die:
+      continue
     cc = f"Hit Dice (d{die})"
-    if not current_character.cc_exists(cc):
+    if not current_character.cc_exists(cc) or current_character.get_cc(cc) < 1:
       continue
     cc_val = current_character.get_cc(cc)
     cc_max = current_character.get_cc_max(cc)
