@@ -9,6 +9,20 @@ argv = &ARGS&
 json = {}
 index = 1
 
+if index < len(argv) and argv[index] == "use":
+  index += 1
+  json["use"] = {}
+  if index < len(argv) and argv[index] == "spell":
+    index += 1
+    if index < len(argv):
+      json["use"]["spell"] = argv[index]
+      index += 1
+  if index < len(argv) and argv[index] == "counter":
+    index += 1
+    if index < len(argv):
+      json["use"]["counter"] = argv[index]
+      index += 1
+
 if index < len(argv) and argv[index] == "attack":
   index += 1
   json["attack"] = { "bonus": argv[index] }
@@ -130,9 +144,15 @@ if "attack" in json:
       "onFalse": []
     }]
 
+use_json = []
+if "use" in json and "spell" in json["use"]:
+  use_json = use_json + [{ "type": "counter", "counter": { "slot": json["use"]["spell"] }, "amount": 1 }]
+if "use" in json and "counter" in json["use"]:
+  use_json = use_json + [{ "type": "counter", "counter": json["use"]["counter"], "amount": 1 }]
+
 automation = {
   "name": argv[0],
-  "automation": [{ "type": "target", "target": "each", "effects": [attack_json] }] if attack_json else [x for x in [save_damage, { "type": "target", "target": "all", "effects": [save_json] }] if x],
+  "automation": [{ "type": "target", "target": "each", "effects": [attack_json] + use_json }] if attack_json else [x for x in [save_damage, { "type": "target", "target": "all", "effects": [save_json] }] + use_json if x],
   "_v": 2,
   "proper": args.last("proper") == "True",
   "verb": args.last("verb"),

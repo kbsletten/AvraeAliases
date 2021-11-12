@@ -8,6 +8,20 @@ argv = &ARGS&
 json = {}
 index = 0
 
+if index < len(argv) and argv[index] == "use":
+  index += 1
+  json["use"] = {}
+  if index < len(argv) and argv[index] == "spell":
+    index += 1
+    if index < len(argv):
+      json["use"]["spell"] = argv[index]
+      index += 1
+  if index < len(argv) and argv[index] == "counter":
+    index += 1
+    if index < len(argv):
+      json["use"]["counter"] = argv[index]
+      index += 1
+
 if index < len(argv) and argv[index] == "attack":
   index += 1
   json["attack"] = { "bonus": argv[index] }
