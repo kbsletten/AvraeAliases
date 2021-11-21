@@ -74,14 +74,15 @@ modifier = me.skills[check_skill] if me else char.skills[check_skill] if char el
 modifier_prof = modifier.prof if modifier else 0
 additional_prof = 2 - modifier_prof if is_exp else 1 - modifier_prof if is_pro else 0
 base_roll = f"""{base_d20}+{(modifier.value if modifier else 0) + additional_prof * prof_bonus}"""
-bonus = args.get("b") + ([effect.effects["cb"] for effect in me.effects if "cb" in effect.effects] if me else [])
+bonus = args.get("b") + ([effect.effect["cb"] for effect in me.effects if "cb" in effect.effect] if me else [])
 
 title = f"{name} makes a {NAMES[check_skill]} check!"
 check_roll = vroll("+".join([base_roll] + bonus))
 success = check_roll.total >= dc
+critical_success = check_roll.total >= dc + 5
 result = "Success!" if success else "Failure!"
 if success:
-  config["success"] += 1
+  config["success"] += 2 if critical_success else 1
 else:
   config["failure"] += 1
 config["log"] = config["log"] + [{ "name": name, "roll": str(check_roll), "result": result }]
@@ -92,7 +93,7 @@ if init:
 -title "{{title}}"
 -f "Meta|**DC**: {{dc}}"
 -f "{{NAMES[check_skill]}}|{{check_roll}}; {{result}}"
--f "Successes|{{config["success"]}}/{{config["goalSuccess"] or "None"}}{{" (+1)" if success else ""}}|inline"
+-f "Successes|{{config["success"]}}/{{config["goalSuccess"] or "None"}}{{" (+2)" if critical_success else " (+1)" if success else ""}}|inline"
 -f "Failures|{{config["failure"]}}/{{config["goalFailure"] or "None"}}{{" (+1)" if not success else ""}}|inline"
 -footer "!challenge check | kbsletten#5710"
 -color <color> -thumb <image>
