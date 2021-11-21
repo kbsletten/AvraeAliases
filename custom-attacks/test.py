@@ -174,7 +174,8 @@ for target_expr in args.get("t"):
               effect = json["save"]["pass"]["effect"]
 
       effect_name, _, effect_args = effect.partition("|") if effect else [None, None, None]
-      target.add_effect(effect_name, effect_args)
+      if effect_name:
+        target.add_effect(effect_name, effect_args)
       damage = target.damage(damage_roll, crit=crit)["damage"] if damage_roll else None
       bonus_damage = target.damage(bonus_damage_roll)["damage"] if bonus_damage_roll else None
       summary = summary + [
