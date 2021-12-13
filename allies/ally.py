@@ -19,5 +19,6 @@ else:
 -f "Ability Check|`!ally check <skill (e.g. athletics, wisdom)>`"
 -f "Save|`!ally save <save (e.g. str, dex)>`"
 -f "Attack|`!ally attack <attack (e.g. longsword, scare)>`"
+-f "Cast|`!ally cast <spell (e.g. faerie, cure)>`"
 -footer "!ally | kbsletten#5710"
 -color <color> -thumb {{ally_image}}
