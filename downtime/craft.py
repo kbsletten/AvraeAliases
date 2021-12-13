@@ -25,6 +25,7 @@ RARITY = {
 
 argv = &ARGS&
 args = argparse(argv)
+bonus = args.get("b")
 tool_name = argv[0].lower() if argv else ""
 tool_name = ([a for a in ABILITIES.keys() if tool_name.lower() in a.lower()] + ["Cobbler's Tools"])[0]
 weeks = int(args.last("weeks", 1))
@@ -57,7 +58,7 @@ tool_pro = 2 if tool_name in exp_tools else 1 if tool_name in pro_tools else 0
 ability = ABILITIES[tool_name]
 modifier = char.stats.get_mod(ability) + char.stats.prof_bonus * tool_pro
 
-craft_expr = f"{base_d20}+{modifier}"
+craft_expr = "+".join([f"{base_d20}+{modifier}"] + bonus)
 
 progress = 0
 
@@ -65,7 +66,7 @@ fields = ""
 
 for i in range(0, weeks):
   craft_roll = vroll(craft_expr)
-  success = 2 if craft_roll.total > dc else 1
+  success = 2 if craft_roll.total >= dc else 1
   fields += f"""-f "Week {i+1}|**{DESCRIPTIONS[ability]} ({tool_name})**: {craft_roll}{"; Success!" if success > 1 else ""}
 **Progress**: {success} week{"s" if success > 1 else ""}" """
   progress += success
