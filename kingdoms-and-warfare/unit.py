@@ -1,10 +1,14 @@
 embed
 <drac2>
-args = argparse(&ARGS&)
+argv = &ARGS&
+args = argparse(argv)
 init = combat()
 
-units = [unit for name, unit in load_json(get("_warfareUnits", "{}")).items() if args.last("unit").lower() in name.lower()] if args.last("unit") else []
+search = args.last("unit") if args.last("unit") else argv[0] if argv and not argv[0].startswith("-") else None
 
+units = [unit for name, unit in load_json(get("_warfareUnits", "{}")).items() if search.lower() in name.lower()] if search else []
+
+unit_name = units[0]["name"] if units else "Unnamed Unit"
 unit_attack = units[0]["attack"] if units else 0
 unit_defense = units[0]["defense"] if units else 10
 unit_power = units[0]["power"] if units else 0
@@ -45,8 +49,10 @@ if target:
   for trait in unit_traits:
     target.add_effect(trait, "")
 
+traits = "\n".join(f" - {trait}" for trait in unit_traits + [trait for trait in target_traits if trait not in unit_traits]) if unit_traits or target_traits else "(no traits)"
+
 </drac2>
--title "{{target_name}}"
+-title "{{target_name or unit_name}}"
 -f "Attack|{{"+" if target_attack >= 0 else ""}}{{target_attack}}|inline"
 -f "Defense|{{target_defense}}|inline"
 -f "Power|{{"+" if target_power >= 0 else ""}}{{target_power}}|inline"
@@ -55,5 +61,5 @@ if target:
 -f "Command|{{"+" if target_command >= 0 else ""}}{{target_command}}|inline"
 -f "Size|{{target_size}}|inline"
 -f "Damage|{{target_damage}}|inline"
--f "Traits|{{"\n".join(f" - {trait}" for trait in unit_traits + [trait for trait in target_traits if trait not in unit_traits])}}"
+-f "Traits|{{traits}}"
 -footer "!unit | kbsletten#5710"
