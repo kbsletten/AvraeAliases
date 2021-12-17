@@ -1,6 +1,6 @@
 embed
 <drac2>
-args = argparse(&ARGS&)
+args = argparse(" ".join([x for x in ["&*&", get_svar("ixArgs", "")] if x]))
 
 init = combat()
 
@@ -44,7 +44,9 @@ for target in targets:
   modifier = 0 + (1 if roller.name in adv else 0) + (-1 if roller.name in dis else 0)
   init_roll = vroll(place[roller.name] if roller.name in place else roller.skills.initiative.d20(base_adv=[False, None, True][modifier + 1]))
   target.set_init(init_roll.total)
-  fields += f"""-f "{roller.name}{f" (for {target.name})" if target.name != roller.name else ""}|{init_roll}|inline" """
+  roller_name = roller.name.replace("|", "-")
+  target_name = target.name.replace("|", "-")
+  fields += f"""-f "{roller_name}{f" (for {target_name})" if target_name != roller_name else ""}|{init_roll}|inline" """
 
 init. end_round()
 init.set_round(0)
