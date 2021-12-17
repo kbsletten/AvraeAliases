@@ -48,7 +48,7 @@ attack_dis = "dis" in argv or "adis" in argv
 attack_base = "2d20kh1" if attack_adv and not attack_dis else "2d20kl1" if attack_dis and not attack_adv else "1d20"
 attack_roll = vroll("+".join([attack_base, str(unit_attack)] +
   args.get("a") +
-  (["-2[fort]"] if any([fort in target_effects for fort in ["City Wall"]]) else [])
+  (["-2[fort]"] if any([fort in target_effects for fort in ["City Wall", "Keep"]]) else [])
 ))
 
 power_adv = "adv" in argv or "padv" in argv
@@ -60,7 +60,7 @@ if target_stal and target_dim and (unit_inf or unit_cav):
 power_base = "2d20kh1" if power_adv and not power_dis else "2d20kl1" if power_dis and not power_adv else "1d20"
 power_roll = vroll("+".join([power_base, str(unit_power)] +
   args.get("p") +
-  (["2[fort]"] if unit_art and any([fort in unit_effects for fort in ["City Wall"]]) else [])
+  (["2[fort]"] if unit_art and any([fort in unit_effects for fort in ["City Wall", "Keep"]]) else [])
 ))
 
 rolls = f"""
@@ -99,14 +99,14 @@ if target:
           target.mod_hp(-1)
           target_info += f"""{target.name} {target.hp_str()} (-1)
 """
-          fields += """-f "Diminished|A unit is diminished when its current casualties are half or less than its starting casualties. The first
-time a unit becomes diminished, it must succeed on a DC 13 Morale test or suffer another casualty. Each unit does this only once per battle." """
+          fields += """-f "Diminished|A unit is diminished when its current casualties are half or less than its starting casualties. The first time a unit becomes diminished, it must succeed on a DC 13 Morale test or suffer another casualty. Each unit does this only once per battle." """
     if target.hp <= 0:
       if target_react and target_rel:
+        target_react = False
+        target.add_effect("Reaction", "", duration=0)
         power_roll = vroll(f"1d20+{target_power}")
         rolls += f"""**Relentless**: {power_roll}
 """
-        target.add_effect("Reaction", "", duration=0)
         if power_roll.total >= 13:
           target.set_hp(1)
           fields += """-f "Relentless|As a reaction to suffering a casualty that would cause this unit to break, this unit makes a DC 13 Power test. On a success, this unit does not break and has 1 casualty." """
@@ -118,11 +118,12 @@ time a unit becomes diminished, it must succeed on a DC 13 Morale test or suffer
         fields += f"""-f "To the Death|If this unit breaks as a result of an opposed unit’s Attack or Power test, the attacking unit suffers 1 casualty." """
         target_info += f"""{unit.name} {unit.hp_str()} (-1)
 """
-    if target.hp > 0 and unit_cav and target_inf and damage > 0:
+    if target_react and target.hp > 0 and unit_cav and target_inf and damage > 0:
+      target_react = False
+      target.add_effect("Reaction", "", duration=0)
       command_roll = vroll(f"1d20+{target_command}")
       rolls += f"""**Set for Charge**: {command_roll}"""
-      fields += """-f "Set for Charge|As a reaction to suffering a casualty from a cavalry or aerial unit, this unit makes a DC 13 Command
-test. On a success, the attacking unit suffers 1 casualty." """
+      fields += """-f "Set for Charge|As a reaction to suffering a casualty from a cavalry or aerial unit, this unit makes a DC 13 Command test. On a success, the attacking unit suffers 1 casualty." """
       if command_roll.total >= 13:
         unit.mod_hp(-1)
         target_info += f"""{unit.name} {unit.hp_str()} (-1)
