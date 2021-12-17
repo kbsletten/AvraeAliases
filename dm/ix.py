@@ -26,6 +26,14 @@ for p in args.get("p"):
     continue
   place[combatant_name] = value
 
+bonus = {}
+for b in args.get("b"):
+  combatant_name, _, value = b.partition("|")
+  combatant_name = init.get_combatant(combatant_name).name if init.get_combatant(combatant_name) else None
+  if not combatant_name:
+    continue
+  bonus[combatant_name] = (bonus[combatant_name] if combatant_name in bonus else []) + [value]
+
 targets = [init.get_combatant(t) for t in args.get("t")]
 if not targets:
   targets = init.groups + [comb for comb in init.combatants if not comb.group]
@@ -42,7 +50,9 @@ for target in targets:
     else:
       roller = target.combatants[0]
   modifier = 0 + (1 if roller.name in adv else 0) + (-1 if roller.name in dis else 0)
-  init_roll = vroll(place[roller.name] if roller.name in place else roller.skills.initiative.d20(base_adv=[False, None, True][modifier + 1]))
+  roller_expr = place[roller.name] if roller.name in place else roller.skills.initiative.d20(base_adv=[False, None, True][modifier + 1])
+  roller_bonus = bonus[roller.name] if roller.name in bonus else []
+  init_roll = vroll("+".join([roller_expr] + roller_bonus))
   target.set_init(init_roll.total)
   roller_name = roller.name.replace("|", "-")
   target_name = target.name.replace("|", "-")
