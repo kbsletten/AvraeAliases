@@ -4,6 +4,8 @@ argv = &ARGS&
 args = argparse(argv)
 init = combat()
 current = init.current if init else character()
+if current and current.type == "group":
+  current = current.combatants[0]
 if args.last("as"):
   current = init.get_combatant(args.last("as")) if init else current
 name = current.name if current else name
