@@ -49,6 +49,13 @@ if index < len(argv) and argv[index] == "save":
         json["save"][save]["damage"] = "({Damage})/2" if "attack" not in json else f"""({json["save"]["fail"]["damage"]})/2"""
 # END parse.py
 
+argv = argv[index:]
+args = argparse(argv)
+
+json["desc"] = args.last("desc")
+json["verb"] = args.last("verb")
+json["proper"] = bool(args.last("proper", False))
+
 if monster_name and monster_name not in saved_json:
   saved_json[monster_name] = {}
 if monster_name and attack_name:

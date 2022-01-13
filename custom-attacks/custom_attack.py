@@ -14,6 +14,9 @@ monster_name = current.monster_name if current else None
 attack_options = [key for key in saved_json[monster_name].keys() if attack_name.lower() in key.lower()] if monster_name in saved_json else None
 attack_name = attack_options[0] if attack_options else attack_name
 json = saved_json[monster_name][attack_name] if monster_name in saved_json and attack_name in saved_json[monster_name] else {}
+attack_verb = (json["verb"] if "verb" in json else None) or "attacks with"
+attack_article = "" if (json["proper"] if "proper" in json else False) else "a "
+attack_desc = json["desc"] if "desc" in json else None
 
 # BEGIN test.py
 title = "Custom Attack!"
@@ -24,7 +27,7 @@ hit_bonus = args.get("b")
 damage_bonus = args.get("d")
 
 if current:
-  title = f"{current.name} attacks with a {attack_name}!"
+  title = f"""{current.name} {attack_verb} {attack_article}{attack_name}!"""
   for effects in current.effects:
     if "adv" in effects.effect:
       modifier = 1 if modifier == None or modifier == 1 else 0
@@ -162,4 +165,5 @@ for target_expr in args.get("t"):
 </drac2>
 -title "{{title}}"
 {{fields}}
+{{f"""-f "Effect|{attack_desc}" """ if attack_desc else ""}}
 -footer "{{target_info or "!custom_attack | kbsletten#5710"}}"
