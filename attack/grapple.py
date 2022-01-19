@@ -3,11 +3,13 @@ embed
 argv = &ARGS&
 args = argparse(argv)
 init = combat()
-current = init.current if init else character()
+current = init.current if init else None
 if current and current.type == "group":
   current = current.combatants[0]
 if args.last("as"):
   current = init.get_combatant(args.last("as")) if init else current
+if not current:
+  current = character()
 name = current.name if current else name
 
 grapple_adv = "adv" in argv
