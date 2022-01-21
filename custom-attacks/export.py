@@ -1,11 +1,14 @@
 embed
 <drac2>
+argv = &ARGS&
+export_yaml = "yaml" in argv
+argv = [arg for arg in argv if arg != "yaml"]
+
 # BEGIN parse.py
 KEYWORDS = ["damage", "effect"]
 ATTACK = ["hit", "crit", "miss"]
 SAVE = ["fail", "fail5", "pass"]
 
-argv = &ARGS&
 json = {}
 index = 1
 
@@ -158,7 +161,12 @@ automation = {
   "verb": args.last("verb"),
   "extra_crit_damage": json["attack"]["crit"]["damage"] if "attack" in json and "crit" in json["attack"] and "damage" in json["attack"]["crit"] else None
 }
+desc = dump_json(automation).replace("\"", "\\\"").replace(": ", ":") if not export_yaml else f"""```
+<avrae hidden>
+{dump_yaml(automation)}
+</avrae>
+```"""
 </drac2>
 -title "Export Attack!"
--desc "{{dump_json(automation).replace("\"", "\\\"").replace(": ", ":")}}"
+-desc "{{desc}}"
 -footer "!custom_attack export | kbsletten#5710"
