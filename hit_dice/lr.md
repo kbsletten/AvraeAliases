@@ -1,1 +1,0 @@
-When you take a long rest, run `!hd lr` to recover half of your hit dice (minimum of 1).

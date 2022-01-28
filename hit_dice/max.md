@@ -1,1 +1,0 @@
-To reset all of the counter, run `!hd max` to recover all of your hit dice.
