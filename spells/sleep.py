@@ -4,7 +4,7 @@ args = argparse(&ARGS&)
 level = int(args.last("l", 1))
 init = combat()
 current = init.me if init and init.me else init.current if init else None
-title = f"{name} cannot cast Sleep!"
+title = f"{current.name} cannot cast Sleep!" if current else f"{name} is not in initiative!"
 fields = ""
 
 can_cast = current and current.spellbook and current.spellbook.can_cast("Sleep", level)
@@ -12,14 +12,14 @@ can_cast = current and current.spellbook and current.spellbook.can_cast("Sleep",
 if can_cast:
   title = f"{current.name} casts Sleep!"
   current.spellbook.cast("Sleep", level)
-  sleep_roll = vroll("5d8" if level == 1 else  f"5d8+{level-1}d8[higher level]")
+  sleep_roll = vroll("5d8" if level == 1 else  f"5d8+{(level-1)*2}d8[higher level]")
   fields += f"""-f "Meta|**Damage**: {sleep_roll}" """
 
   used = 0
   targets = [init.get_combatant(target) for target in args.get("t") if init.get_combatant(target)]
   for _ in range(0, len(targets)):
     lowest_hp = None
-    for target in targets:
+    for target in [init.get_combatant(target.name) for target in targets]:
       if any(effect.name == "Asleep" for effect in target.effects):
         continue
       if lowest_hp == None or target.hp < lowest_hp.hp:
@@ -32,7 +32,7 @@ if can_cast:
       break
 
 if current:
-  remaining = current.spellbook.remaining_casts_of("Sleep", 1)
+  remaining = current.spellbook.remaining_casts_of("Sleep", level)
   if can_cast and "At Will" not in remaining:
     remaining = f"{remaining} (-1)"
   fields += """-f "Effect|Roll 5d8; the total is how many hit points of creatures this spell can affect. Creatures within 20 feet of a point you choose within range are affected in ascending order of their current hit points (ignoring unconscious creatures).
