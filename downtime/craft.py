@@ -30,7 +30,7 @@ tool_name = argv[0].lower() if argv else ""
 tool_name = ([a for a in ABILITIES.keys() if tool_name.lower() in a.lower()] + ["Cobbler's Tools"])[0]
 weeks = int(args.last("weeks", 1))
 rarity = ([r for r in ["legendary", "very", "rare", "uncommon"] if r in argv] + ["common"])[0]
-minor = "minor" in argv
+minor = "minor" in argv and rarity != "common"
 dc = {
   "legendary": 30,
   "very": 25,
@@ -45,6 +45,7 @@ cost = int({
   "uncommon": 100,
   "common": 50
 }[rarity] * weeks * (0.5 if minor else 1.0))
+cc = f"{'Minor ' if minor else ''}{RARITY[rarity]} Crafting ({tool_name})"
 
 char = character()
 exp_tools = char.cvars["eTools"].split(", ") if char and "eTools" in char.cvars else []
@@ -71,7 +72,9 @@ for i in range(0, weeks):
 **Progress**: {success} week{"s" if success > 1 else ""}" """
   progress += success
 
-fields += f"""-f "Total|{progress} weeks" """
+char.create_cc_nx(cc, minVal=0)
+char.mod_cc(cc, progress)
+fields += f"""-f "{cc}|{char.cc_str(cc)} (+{progress})" """
 
 complications = [
   "Rumors swirl that what you’re working on is unstable and a threat to the community.",
