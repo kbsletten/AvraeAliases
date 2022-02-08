@@ -1,0 +1,1 @@
+echo {{argv=&ARGS&}}{{args=argparse(argv)}}{{C=combat().me or combat().current}}{{s=argv[0] if argv else "A1"}}{{c=args.last("color", "bk")}}{{ns=[n for n in C.note.split("\n") if not n.startswith("Overlay: ")] if C.note else []}}{{_=C.set_note(" | ".join(ns + [f"Overlay: uc2{c}{s}"]))}}Setting overlay at {{s}} attached to {{C.name}}
