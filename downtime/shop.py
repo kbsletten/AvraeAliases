@@ -32,7 +32,8 @@ cc = f"{'Minor ' if minor else ''}{RARITY[rarity]} Shopping"
 
 char = character()
 base_adv = args.adv(boolwise=True)
-craft_expr = "+".join([char.skills.persuasion.d20(base_adv=base_adv)] + bonus)
+min_val = int(args.last("mc")) if args.last("mc") else None
+craft_expr = "+".join([char.skills.persuasion.d20(base_adv=base_adv, min_val=min_val)] + bonus)
 
 progress = 0
 
