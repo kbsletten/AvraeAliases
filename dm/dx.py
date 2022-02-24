@@ -1,9 +1,14 @@
 embed
 <drac2>
-args = argparse(&ARGS&)
+argv = &ARGS&
+flags = [arg for arg in argv if arg.startswith("-")]
+first_arg = argv.index(flags[0]) if flags else len(argv)
+arg_damage = [" ".join(argv[:first_arg])] if first_arg else []
+args = argparse(argv[first_arg:])
 
 init = combat()
-damage_roll = vroll(f"({'+'.join(args.get('d'))})/2" if "half" in args else '+'.join(args.get("d")))
+damage_expr = "+".join(arg_damage + args.get("d"))
+damage_roll = vroll(f"({damage_expr})/2" if "half" in args else damage_expr)
 
 fields = f"""-f "Meta|**Damage:** {damage_roll}" """
 
