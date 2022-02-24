@@ -43,6 +43,7 @@ for die, num in hd_max.items():
     char.create_cc(cc, minVal=0, maxVal=num, reset='none')
     char.set_cc(cc, cc_val)
     fields += f"""-f "Creating {cc}|{char.cc_str(cc)} (was {cc_max})" """
+  hd_max[die] = max(hd_max[die], cc_max)
   hd_val[die] = cc_val
 
 lastindex = ([i for i, arg in enumerate(argv) if arg and arg.startswith("-")] + [len(argv)])[0]
