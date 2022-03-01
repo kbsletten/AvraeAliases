@@ -15,8 +15,8 @@ for comb in init.combatants if init else []:
   if comb.id in target_ids or comb.controller != ctx.author.id and comb.monster_name:
     old_hp = comb.hp
     comb.set_hp(comb.max_hp)
-    comb.reset_slots()
-    slots = [f"""**{spell}**: {"◉" * comb.spellbook.remaining_casts_of(spell, 1)}""" for spell in comb.spellbook.spells]
+    comb.spellbook.reset_slots()
+    slots = [f"""**{spell}**: {comb.spellbook.remaining_casts_of(spell, 1)}""" for spell in comb.spellbook.spells]
     fields += f"""-f "{comb.name}|{comb.hp_str()} (+{comb.hp - old_hp})" """
 
 </drac2>
