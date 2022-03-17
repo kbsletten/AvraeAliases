@@ -6,7 +6,9 @@ args = argparse(argv)
 char = character()
 init = combat()
 
-target = init.get_combatant(args.last("t")) if init and args.last("t") else init.me if init and init.me else init.current if init and init.current else None
+target = None
+if init:
+  target = init.get_combatant(args.last("t")) if args.last("t") else init.me or init.current
 
 name = target.name if target else char.name if char else name
 
@@ -22,6 +24,10 @@ b = [effect.effect["cb"] for effect in target.effects if "cb" in effect.effect] 
 stealth_roll = vroll("+".join([d20] + b + args.get("b")))
 
 if target:
+  for effect in target.effects:
+    if not effect.name.startswith("Hidden ("):
+      continue
+    target.remove_effect(effect.name)
   target.add_effect(f"Hidden ({stealth_roll.total})", "", 2)
 
 </drac2>
