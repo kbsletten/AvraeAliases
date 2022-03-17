@@ -3,7 +3,9 @@ embed
 argv = &ARGS&
 args = argparse(argv)
 init = combat()
-current = init.current if init else None
+current = init.me if init else None
+if not current:
+  current = init.current if init else None
 if current and current.type == "group":
   current = current.combatants[0]
 if args.last("as"):
@@ -56,5 +58,5 @@ escape_message = "Automatic Pass!" if escape_result == True else "Automatic Fail
 -f "{{name}}|**{{skill_name}}**: {{escape_message}}"
 -f "Effect|When you want to grab a creature or wrestle with it, you can use the Attack action to make a special melee attack, a grapple. If you're able to make multiple attacks with the Attack action, this attack replaces one of them.
 The target of your grapple must be no more than one size larger than you and must be within your reach. Using at least one free hand, you try to seize the target by making a grapple check instead of an attack roll: a Strength (Athletics) check contested by the target's Strength (Athletics) or Dexterity (Acrobatics) check (the target chooses the ability to use). You succeed automatically if the target is incapacitated. If you succeed, you subject the target to the grappled condition. The condition specifies the things that end it, and you can release the target whenever you like (no action required)."
--footer "Grappling"
+-footer "!escape | kbsletten#5710"
 -color <color>
