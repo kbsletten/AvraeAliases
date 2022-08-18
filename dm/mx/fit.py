@@ -1,5 +1,9 @@
 embed
 <drac2>
+using (
+  util='f90efd6e-d7ce-44e0-b0c9-0b3438a14271'
+)
+
 args = argparse(&ARGS&)
 init = combat()
 
@@ -10,48 +14,29 @@ minY = 100
 maxX = 1
 maxY = 1
 
-CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-NUMS = "0123456789"
-
 for each in init.combatants if init else []:
-  location = (([note[len("Location: "):] for note in each.note.split(' | ') if note.startswith("Location: ")] if each.note else []) + [None])[0]
-  size = (([note[len("Size :"):len("Size :")+1].lower() for note in each.note.split(' | ') if note.startswith("Size: ")] if each.note else []) + [None])[0]
-  if not location:
+  topLeft, bottomRight = util.get_coords(each)
+  if not topLeft:
     continue
-  vertical = 0
-  horizontal = 0
-  if location:
-    for ch in location:
-      if ch in CHARS:
-        horizontal = horizontal * 26 + CHARS.index(ch) + 1
-      elif ch in NUMS:
-        vertical = vertical * 10 + NUMS.index(ch)
-  diameter = 4 if size == "c" else 3 if size == "g" else 2 if size == "h" else 1 if size == "l" else 0
-  minX = max(1, min(minX, horizontal - border))
-  minY = max(1, min(minY, vertical - border))
-  maxX = min(100, max(maxX, horizontal + border + diameter))
-  maxY = min(100, max(maxY, vertical + border + diameter))
+  x1, y1 = topLeft
+  x2, y2 = bottomRight
+  minX = max(1, min(minX, x1 - border))
+  minY = max(1, min(minY, y1 - border))
+  maxX = min(100, max(maxX, x2 + border))
+  maxY = min(100, max(maxY, y2 + border))
 
-coord = ""
-n = minX
-for _ in range(0, 3):
-  if n > 0:
-    remainder = (n - 1) % 26
-    n = (n - 1) // 26
-    coord = CHARS[remainder] + coord
+coord = util.to_alpha(minX, minY)
 
 width = max(1, maxX - minX + 1)
 height = max(1, maxY - minY + 1)
 
-for comb in init.combatants if init else []:
-  map_effect = comb.get_effect("map")
-  if not map_effect:
-    continue
-  map_parameters = [f"View: {coord}{minY}:{width}x{height}"] + [effect for effect in map_effect.effect["attack"]["details"].split(" ~ ") if not effect.startswith("View: ")]
-  comb.add_effect("map", f"""-attack "||{" ~ ".join(map_parameters)}" """)
+map_options, comb = util.get_map_options(init)
+map_options["View"] = f"{coord}:{width}x{height}"
+if comb:
+  util.set_map_options(comb, map_options)
 
 </drac2>
 -title "Resizing map to fit"
--desc "{{coord}}{{minY}}:{{width}}x{{height}}"
--footer "!mx | kbsletten#5710"
+-desc "{{map_options["View"]}} ({{f"saved on {comb.name}" if comb else "not saved"}})"
+-footer "!mx fit | kbsletten#5710"
 -color <color>
