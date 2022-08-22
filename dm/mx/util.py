@@ -3,20 +3,38 @@
 CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 NUMS = "0123456789"
 
-def get_coords(comb):
-  location = (([note[len("Location: "):] for note in comb.note.split(" | ") if note.startswith("Location: ")] if comb.note else []) + [None])[0]
-  size = (([note[len("Size :"):len("Size :")+1].lower() for note in comb.note.split(" | ") if note.startswith("Size: ")] if comb.note else []) + [None])[0]
-  if not location:
-    return [None, None]
-  vertical = 0
-  horizontal = 0
+def get_settings(comb):
+  settings = {}
+  for note in comb.note.split(" | ") if comb.note else []:
+    key, _, value = note.partition(": ")
+    if not value:
+      value = key
+      key = "Note"
+    settings[key] = value
+  return settings
+
+def set_settings(comb, settings):
+  comb.set_note(" | ".join([f"{key}: {value}" for key, value in settings.items()]))
+
+def parse_coord(location):
+  y = 0
+  x = 0
   for ch in location:
     if ch in CHARS:
-      horizontal = horizontal * 26 + CHARS.index(ch) + 1
+      x = x * 26 + CHARS.index(ch) + 1
     elif ch in NUMS:
-      vertical = vertical * 10 + NUMS.index(ch)
+      y = y * 10 + NUMS.index(ch)
+  return (x, y)
+
+def get_coords(comb):
+  settings = get_settings(comb)
+  location = settings["Location"] if "Location" in settings else None
+  size = settings["Size"] if "Size" in settings else None
+  if not location:
+    return [None, None]
+  x, y = parse_coord(location)
   diameter = 4 if size == "c" else 3 if size == "g" else 2 if size == "h" else 1 if size == "l" else 0
-  return [(horizontal, vertical), (horizontal + diameter, vertical + diameter)]
+  return [(x, y), (x + diameter, y + diameter)]
 
 def to_alpha(x, y):
   coord = ""
