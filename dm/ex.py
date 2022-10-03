@@ -25,7 +25,7 @@ for group, combatant in targets:
     if each.effects:
       fields += f"""-f "{each.name}|"""
       for effect in each.effects:
-        should_remove = effect.name != "map" and effect.duration > -1 and effect.duration <= rounds
+        should_remove = effect.name != "map" and effect.duration and effect.duration <= rounds
         fields += f"{effect.name}{'' if should_remove else ' (not removed)'}\n"
         if should_remove:
           each.remove_effect(effect.name)
