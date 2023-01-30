@@ -49,6 +49,6 @@ for group, combatant in targets:
     )
     fields += f"""-f "{each.name}|{eff.name}|inline" """
 </drac2>
--title "Knocking combatants prone!"
+-title "Knocking Prone"
 {{fields}}
 -footer "!ex prone | kbsletten#5710"
