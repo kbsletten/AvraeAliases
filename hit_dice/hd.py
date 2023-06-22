@@ -62,7 +62,12 @@ for command in argv[:lastindex]:
   if cc_val < num:
     fields += f"""-f "Using {num}d{die}|Unable to use {num} hit dice, had {cc_val}" """
     continue
-  hd_roll = vroll(f"{num}d{die}+{num*con_mod}")
+  if args.adv() == 1:
+    hd_roll = vroll("+".join(f"2d{die}kh1+{con_mod}" for _ in range(num)))
+  elif args.adv() == -1:
+    hd_roll = vroll("+".join(f"2d{die}kl1+{con_mod}" for _ in range(num)))
+  else:
+    hd_roll = vroll("+".join(f"d{die}+{con_mod}" for _ in range(num)))
   old_hp = char.hp
   char.modify_hp(hd_roll.total, overflow=False)
   char.mod_cc(cc, -num)
