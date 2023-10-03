@@ -1,0 +1,150 @@
+{
+  "The Hanged Man's Rope": {
+    "actions": {
+      "The Hanged Man's Gambit": {
+        "name": "The Hanged Man's Gambit",
+        "automation": [
+          {
+            "type": "target",
+            "target": "self",
+            "effects": [
+              {
+                "type": "ieffect2",
+                "name": "The Hanged Man's Gambit (Restrained)",
+                "duration": "10",
+                "buttons": [
+                  {
+                    "label": "Drop The Hanged Man's Gambit",
+                    "automation": [
+                      {
+                        "type": "remove_ieffect"
+                      }
+                    ],
+                    "verb": "drops The Hanged Man's Gambit",
+                    "style": "1"
+                  }
+                ],
+                "save_as": "gambit"
+              }
+            ]
+          },
+          {
+            "type": "target",
+            "target": "all",
+            "effects": [
+              {
+                "type": "save",
+                "stat": "str",
+                "fail": [
+                  {
+                    "type": "ieffect2",
+                    "name": "The Hanged Man's Rope (Restrained)",
+                    "duration": "10",
+                    "parent": "gambit",
+                    "effects": {
+                      "attack_advantage": "-1"
+                    },
+                    "buttons": [
+                      {
+                        "label": "Try to Escape The Hanged Man's Rope",
+                        "automation": [
+                          {
+                            "type": "target",
+                            "target": "self",
+                            "effects": [
+                              {
+                                "type": "save",
+                                "stat": "str",
+                                "fail": [],
+                                "success": [
+                                  {
+                                    "type": "remove_ieffect"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "verb": "tries to escape The Hanged Man's Rope",
+                        "style": "1",
+                        "defaultDC": "8+max(strengthMod,dexterityMod)+proficiencyBonus"
+                      }
+                    ],
+                    "desc": "The creature must make a Strength saving throw against a DC equal to 8 + your Strength or Dexterity modifier + your proficiency bonus. On a failed save, the creature is wrapped up in the rope and is restrained for one minute or until you attack another creature with the rope. The creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success."
+                  }
+                ],
+                "success": [],
+                "dc": "8+max(strengthMod,dexterityMod)+proficiencyBonus"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "When you hold this rope, you can use your action to wrap up every creature within 15 feet in the rope. Each creature must make a Strength saving throw against a DC equal to 8 + your Strength or Dexterity modifier + your proficiency bonus. On a failed save, a creature is restrained for one minute or until you end the effect (no action required). A restrained creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. While you have a creature restrained, you are also restrained."
+          }
+        ],
+        "_v": 2,
+        "proper": false
+      },
+      "The Hanged Man's Rope": {
+        "name": "The Hanged Man's Rope",
+        "automation": [
+          {
+            "type": "target",
+            "target": "all",
+            "effects": [
+              {
+                "type": "save",
+                "stat": "str",
+                "fail": [
+                  {
+                    "type": "ieffect2",
+                    "name": "The Hanged Man's Rope (Restrained)",
+                    "duration": "10",
+                    "effects": {
+                      "attack_advantage": "-1"
+                    },
+                    "buttons": [
+                      {
+                        "label": "Try to Escape The Hanged Man's Rope",
+                        "automation": [
+                          {
+                            "type": "target",
+                            "target": "self",
+                            "effects": [
+                              {
+                                "type": "save",
+                                "stat": "str",
+                                "fail": [],
+                                "success": [
+                                  {
+                                    "type": "remove_ieffect"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "verb": "tries to escape The Hanged Man's Rope",
+                        "style": "1"
+                      }
+                    ],
+                    "desc": "The creature must make a Strength saving throw against a DC equal to 8 + your Strength or Dexterity modifier + your proficiency bonus. On a failed save, the creature is wrapped up in the rope and is restrained for one minute or until you attack another creature with the rope. The creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success."
+                  }
+                ],
+                "success": [],
+                "dc": "8+max(strengthMod,dexterityMod)+proficiencyBonus"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "When you take the Attack action, you can replace one of your attacks and cause the rope to writhe around a creature within 30 feet of you that you can see. The creature must make a Strength saving throw against a DC equal to 8 + your Strength or Dexterity modifier + your proficiency bonus. On a failed save, the creature is wrapped up in the rope and is restrained for one minute or until you attack another creature with the rope. The creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success."
+          }
+        ],
+        "_v": 2,
+        "proper": true
+      }
+    }
+  }
+}

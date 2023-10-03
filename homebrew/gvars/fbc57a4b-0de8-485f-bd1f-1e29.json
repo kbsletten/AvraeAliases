@@ -1,0 +1,87 @@
+{
+  "The Lover's Bow": {
+    "ccs": {
+      "The Lover's Arrow": {
+        "min": 0,
+        "max": "{{proficiencyBonus}}",
+        "reset": "long",
+        "desc": "You can imbue an arrow with this magic a number of times equal to your proficiency bonus and you regain all expended uses at dawn."
+      }
+    },
+    "actions": {
+      "The Lover's Arrow": {
+        "name": "Lover's Arrow",
+        "automation": [
+          {
+            "type": "target",
+            "target": "all",
+            "effects": [
+              {
+                "type": "counter",
+                "counter": "The Lover's Arrow",
+                "amount": "1"
+              },
+              {
+                "type": "save",
+                "stat": "wis",
+                "fail": [
+                  {
+                    "type": "ieffect2",
+                    "name": "The Lover's Arrow (Charmed by {caster.name})",
+                    "duration": "10",
+                    "buttons": [
+                      {
+                        "label": "Resist The Lover's Arrow",
+                        "automation": [
+                          {
+                            "type": "target",
+                            "target": "self",
+                            "effects": [
+                              {
+                                "type": "save",
+                                "stat": "wis",
+                                "fail": [],
+                                "success": [
+                                  {
+                                    "type": "remove_ieffect"
+                                  }
+                                ],
+                                "dc": ""
+                              }
+                            ]
+                          }
+                        ],
+                        "verb": "attempts to resist The Lover's Arrow",
+                        "style": "1",
+                        "defaultDC": "8+dexterityMod+proficiencyBonus"
+                      },
+                      {
+                        "label": "Took Damage",
+                        "automation": [
+                          {
+                            "type": "remove_ieffect"
+                          }
+                        ],
+                        "verb": "took damage",
+                        "style": "4"
+                      }
+                    ],
+                    "desc": "While the creature is charmed, it is unable to take actions or reactions and its movement speed becomes 0. The effect ends on it if it takes damage and it can repeat the save at the end of each of its turns, ending the effect on a success."
+                  }
+                ],
+                "success": [],
+                "dc": "8+dexterityMod+proficiencyBonus"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "When you attack using this bow, you can imbue your arrows with enchanting magic. If the arrow hits a creature, it must make a Wisdom saving throw against a DC of 8 + your Dexterity modifier + your proficiency bonus or become charmed by you for one minute. While the creature is charmed, it is unable to take actions or reactions and its movement speed becomes 0. The effect ends on it if it takes damage and it can repeat the save at the end of each of its turns, ending the effect on a success."
+          }
+        ],
+        "_v": 2,
+        "proper": false
+      }
+    }
+  }
+}

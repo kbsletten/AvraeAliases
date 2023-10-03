@@ -1,0 +1,79 @@
+{
+  "Judgement's Horn": {
+    "ccs": {
+      "Judgement's Terror": {
+        "min": 0,
+        "max": 1,
+        "reset": "long"
+      }
+    },
+    "actions": {
+      "Judgement's Terror": {
+        "name": "Judgement's Terror",
+        "automation": [
+          {
+            "type": "counter",
+            "counter": "Judgement's Terror",
+            "amount": "1"
+          },
+          {
+            "type": "target",
+            "target": "all",
+            "effects": [
+              {
+                "type": "save",
+                "stat": "wis",
+                "fail": [
+                  {
+                    "type": "ieffect2",
+                    "name": "Judgement's Terror (Frightened of {caster.name})",
+                    "duration": "10",
+                    "effects": {
+                      "attack_advantage": "-1"
+                    },
+                    "buttons": [
+                      {
+                        "label": "Resist Judgement's Terror",
+                        "automation": [
+                          {
+                            "type": "target",
+                            "target": "self",
+                            "effects": [
+                              {
+                                "type": "save",
+                                "stat": "wis",
+                                "fail": [],
+                                "success": [
+                                  {
+                                    "type": "remove_ieffect"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "verb": "tries to resist Judgement's Terror",
+                        "style": "1",
+                        "defaultDC": "8+charismaMod+proficiencyBonus"
+                      }
+                    ],
+                    "desc": "A creature who fails the saving throw is frightened of you for 1 minute. A frightened creature can repeat the save at the end of each of its turns, ending the effect on a success."
+                  }
+                ],
+                "success": [],
+                "dc": "8+charismaMod+proficiencyBonus"
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "As an action, you blow the horn. Each creature who hears the horn must make a Wisdom saving throw against a DC equal to 8 + your Charisma modifier + your proficiency bonus. A creature who fails the saving throw is frightened of you for 1 minute. A frightened creature can repeat the save at the end of each of its turns, ending the effect on a success. Once you use this feature, you cannot do so again until the next dawn."
+          }
+        ],
+        "_v": 2,
+        "proper": true,
+        "verb": "sounds"
+      }
+    }
+  }
+}
